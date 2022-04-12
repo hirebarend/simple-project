@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[Logs]
+(
+    [Id] BIGINT IDENTITY (1, 1) NOT NULL,
+    [Created] DATETIMEOFFSET(7) NOT NULL,
+    [Message] NVARCHAR(100) NOT NULL,
+    [Reference] NVARCHAR(36) NOT NULL
+    CONSTRAINT [PK_Logs] PRIMARY KEY CLUSTERED ([Id] ASC)
+);
