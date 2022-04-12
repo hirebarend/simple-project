@@ -20,7 +20,9 @@ var configuration = new ConfigurationBuilder()
 
 var mongoClient = new MongoClient(configuration.GetConnectionString("MongoDb"));
 
-var mongoCollection = mongoClient.GetDatabase("simple-project").GetCollection<SimpleProject.Infrastructure.MongoDb.DataTransferObjects.Order>("orders");
+var mongoDatabase = mongoClient.GetDatabase("simple-project");
+
+var mongoCollection = mongoDatabase.GetCollection<SimpleProject.Infrastructure.MongoDb.DataTransferObjects.Order>("orders");
 
 var serviceBusClient = new ServiceBusClient(configuration.GetConnectionString("AzureServiceBus"));
 
