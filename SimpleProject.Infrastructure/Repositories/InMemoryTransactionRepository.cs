@@ -15,10 +15,10 @@ namespace SimpleProject.Infrastructure.Repositories
 
         public Task<Transaction> Insert(Transaction transaction)
         {
-            ChaosMonkey.Do();
-
             lock (_lock)
             {
+                ChaosMonkey.Do();
+
                 var transactionExisting = _transactions.FirstOrDefault(x => x.Reference == transaction.Reference);
 
                 if (transactionExisting != null)
@@ -36,10 +36,10 @@ namespace SimpleProject.Infrastructure.Repositories
 
         public Task<Transaction> Update(Transaction transaction)
         {
-            ChaosMonkey.Do();
-
             lock (_lock)
             {
+                ChaosMonkey.Do();
+
                 var transactionExisting = _transactions.FirstOrDefault(x => x.Reference == transaction.Reference);
 
                 if (transactionExisting == null)
@@ -64,9 +64,9 @@ namespace SimpleProject.Infrastructure.Repositories
                     Console.WriteLine($"_balance: {_balance}");
                 }
 
-                    transactionExisting.Reference = transaction.Reference;
+                transactionExisting.Reference = transaction.Reference;
                 transactionExisting.State = transaction.State;
-                transactionExisting.Version = transaction.Version + 1;
+                transactionExisting.Version = Convert.ToInt16(transaction.Version + 1);
                 transactionExisting.Updated = DateTimeOffset.UtcNow;
 
                 ChaosMonkey.Do();

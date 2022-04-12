@@ -15,8 +15,6 @@ var connectionString = "Data Source=localhost\\SQLEXPRESS; Initial Catalog=Proje
 
 var serviceBusClient = new ServiceBusClient("Endpoint=sb://simple-project.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=YF/5618v6HAvujlxQ6ZofvOZn36XXBKb/TDPbpiSvfg=");
 
-// var orderRepository = new InMemoryOrderRepository();
-
 var orderRepository = new MsSqlServerOrderRepository(connectionString);
 
 orderRepository.DeleteAll().GetAwaiter().GetResult();
@@ -25,7 +23,7 @@ var productGatewayLogRepository = new MsSqlServerProductGatewayLogRepository(con
 
 productGatewayLogRepository.DeleteAll().GetAwaiter().GetResult();
 
-var transactionRepository = new InMemoryTransactionRepository();
+var transactionRepository = new MsSqlServerTransactionRepository(connectionString);
 
 var productGateway = new ProductGateway(productGatewayLogRepository);
 
@@ -64,6 +62,12 @@ async Task ServiceBusProcessorOrderEvents_ProcessMessageAsync(ProcessMessageEven
 
         return;
     }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+
+        throw;
+    }
 }
 
 serviceBusProcessorOrderEvents.StartProcessingAsync();
@@ -93,29 +97,25 @@ async Task ServiceBusProcessorTransactionEvents_ProcessMessageAsync(ProcessMessa
 
         return;
     }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+
+        throw;
+    }
 }
 
 serviceBusProcessorTransactionEvents.StartProcessingAsync();
 
-//var count = 0;
-
-//while (count < 150)
-//{
-//    try
-//    {
-//        serviceBus.Publish(new OrderEvent
-//        {
-//            Order = Order.Create(Guid.NewGuid().ToString()),
-//            Transaction = null,
-//            Type = OrderEventType.Create,
-//        }).GetAwaiter().GetResult();
-
-//        count++;
-//    }
-//    catch
-//    {
-//    }
-//}
+for (var i = 0; i < 100; i++)
+{
+    serviceBus.Publish(new OrderEvent
+    {
+        Order = Order.Create(Guid.NewGuid().ToString()),
+        Transaction = null,
+        Type = OrderEventType.Create,
+    }).GetAwaiter().GetResult();
+}
 
 serviceBus.Publish(new OrderEvent
 {
@@ -123,13 +123,5 @@ serviceBus.Publish(new OrderEvent
     Transaction = null,
     Type = OrderEventType.Create,
 }).GetAwaiter().GetResult();
-
-
-//while (true)
-//{
-//    Console.WriteLine($"{orderRepository._orders.Count(x => x.State == OrderState.Completed)} / {orderRepository._orders.Count()}");
-
-//    Thread.Sleep(1000);
-//}
 
 Console.ReadKey();

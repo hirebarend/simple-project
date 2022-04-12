@@ -2,7 +2,6 @@
 using SimpleProject.Application.Interfaces;
 using SimpleProject.Domain.Order;
 using SimpleProject.Domain.Transaction;
-using SimpleProject.Shared.Misc;
 
 namespace SimpleProject.Application.ServiceBuses
 {
@@ -25,28 +24,20 @@ namespace SimpleProject.Application.ServiceBuses
 
         public async Task Publish(OrderEvent orderEvent)
         {
-            ChaosMonkey.Do();
-
             var json = System.Text.Json.JsonSerializer.Serialize(orderEvent);
 
             var serviceBusMessage = new ServiceBusMessage(json);
 
             await _serviceBusSenderOrderEvents.SendMessageAsync(serviceBusMessage);
-
-            ChaosMonkey.Do();
         }
 
         public async Task Publish(TransactionEvent transactionEvent)
         {
-            ChaosMonkey.Do();
-
             var json = System.Text.Json.JsonSerializer.Serialize(transactionEvent);
 
             var serviceBusMessage = new ServiceBusMessage(json);
 
             await _serviceBusSenderTransactionEvents.SendMessageAsync(serviceBusMessage);
-
-            ChaosMonkey.Do();
         }
     }
 }

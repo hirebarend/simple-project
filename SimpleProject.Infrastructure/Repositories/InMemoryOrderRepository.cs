@@ -13,10 +13,10 @@ namespace SimpleProject.Infrastructure.Repositories
 
         public Task<Order> Insert(Order order)
         {
-            ChaosMonkey.Do();
-
             lock (_lock)
             {
+                ChaosMonkey.Do();
+
                 var orderExisting = _orders.FirstOrDefault(x => x.Reference == order.Reference);
 
                 if (orderExisting != null)
@@ -37,10 +37,10 @@ namespace SimpleProject.Infrastructure.Repositories
 
         public Task<Order> Update(Order order)
         {
-            ChaosMonkey.Do();
-
             lock (_lock)
             {
+                ChaosMonkey.Do();
+
                 var orderExisting = _orders.FirstOrDefault(x => x.Reference == order.Reference);
 
                 if (orderExisting == null)
@@ -55,7 +55,7 @@ namespace SimpleProject.Infrastructure.Repositories
 
                 orderExisting.Reference = order.Reference;
                 orderExisting.State = order.State;
-                orderExisting.Version = order.Version + 1;
+                orderExisting.Version = Convert.ToInt16(order.Version + 1);
                 orderExisting.Updated = DateTimeOffset.UtcNow;
 
                 ChaosMonkey.Do();

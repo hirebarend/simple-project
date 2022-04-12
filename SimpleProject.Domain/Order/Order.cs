@@ -8,7 +8,7 @@
 
         public OrderState State { get; set; }
 
-        public int Version { get; set; }
+        public short Version { get; set; }
 
         public DateTimeOffset Updated { get; set; }
 

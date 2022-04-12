@@ -1,4 +1,5 @@
 ﻿using SimpleProject.Infrastructure.Interfaces;
+using SimpleProject.Shared.Misc;
 
 namespace SimpleProject.Application.Gateways
 {
@@ -10,12 +11,21 @@ namespace SimpleProject.Application.Gateways
         {
             _productGatewayLogRepository = productGatewayLogRepository ?? throw new ArgumentNullException(nameof(productGatewayLogRepository));
         }
-    
+
         public async Task<bool> Purchase(string reference)
         {
-            await _productGatewayLogRepository.Insert(reference);
+            try
+            {
+                await _productGatewayLogRepository.Insert(reference);
 
-            return true;
+                ChaosMonkey.Do();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

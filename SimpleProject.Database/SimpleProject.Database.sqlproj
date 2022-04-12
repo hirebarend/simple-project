@@ -58,6 +58,7 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
+    <Folder Include="Constraints" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Orders.sql" />
@@ -65,5 +66,11 @@
     <Build Include="StoredProcedures\UpdateOrder.sql" />
     <Build Include="Tables\Logs.sql" />
     <Build Include="StoredProcedures\InsertLog.sql" />
+    <Build Include="Constraints\Logs.sql" />
+    <Build Include="Constraints\Orders.sql" />
+    <Build Include="Tables\Transactions.sql" />
+    <Build Include="Constraints\Transactions.sql" />
+    <Build Include="StoredProcedures\UpdateTransaction.sql" />
+    <Build Include="StoredProcedures\InsertTransaction.sql" />
   </ItemGroup>
 </Project>

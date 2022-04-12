@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[InsertLog]
-@reference NVARCHAR(36),
-@message NVARCHAR(100)
+@reference VARCHAR(36),
+@message VARCHAR(100)
 AS BEGIN
 	BEGIN TRAN;
 		INSERT INTO [dbo].[Logs] ([Created], [Message], [Reference])

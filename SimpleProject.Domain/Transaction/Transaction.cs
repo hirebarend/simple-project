@@ -12,7 +12,7 @@
 
         public DateTimeOffset Updated { get; set; }
 
-        public uint Version { get; set; }
+        public short Version { get; set; }
 
         public static Transaction Create(string reference)
         {
