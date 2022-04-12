@@ -1,29 +1,40 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 using SimpleProject.Application.EventHandlers;
 using SimpleProject.Application.Gateways;
 using SimpleProject.Application.ServiceBuses;
 using SimpleProject.Application.Services;
 using SimpleProject.Domain.Order;
 using SimpleProject.Domain.Transaction;
+using SimpleProject.Infrastructure.MongoDb;
 using SimpleProject.Infrastructure.Repositories;
 using SimpleProject.Shared.Exceptions;
 
 Console.WriteLine("Hello, World!");
 
-var connectionString = "Data Source=localhost\\SQLEXPRESS; Initial Catalog=ProjectGecko; Integrated Security=True;";
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
 
-var serviceBusClient = new ServiceBusClient("Endpoint=sb://simple-project.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=YF/5618v6HAvujlxQ6ZofvOZn36XXBKb/TDPbpiSvfg=");
+var mongoClient = new MongoClient(configuration.GetConnectionString("MongoDb"));
 
-var orderRepository = new MsSqlServerOrderRepository(connectionString);
+var mongoCollection = mongoClient.GetDatabase("simple-project").GetCollection<SimpleProject.Infrastructure.MongoDb.DataTransferObjects.Order>("orders");
 
-orderRepository.DeleteAll().GetAwaiter().GetResult();
+var serviceBusClient = new ServiceBusClient(configuration.GetConnectionString("AzureServiceBus"));
 
-var productGatewayLogRepository = new MsSqlServerProductGatewayLogRepository(connectionString);
+var orderRepository = new MongoDbOrderRepository(mongoCollection);
+
+//var orderRepository = new MsSqlServerOrderRepository(configuration.GetConnectionString("MsSqlServer"));
+
+//orderRepository.DeleteAll().GetAwaiter().GetResult();
+
+var productGatewayLogRepository = new MsSqlServerProductGatewayLogRepository(configuration.GetConnectionString("MsSqlServer"));
 
 productGatewayLogRepository.DeleteAll().GetAwaiter().GetResult();
 
-var transactionRepository = new MsSqlServerTransactionRepository(connectionString);
+var transactionRepository = new MsSqlServerTransactionRepository(configuration.GetConnectionString("MsSqlServer"));
 
 var productGateway = new ProductGateway(productGatewayLogRepository);
 
@@ -107,15 +118,15 @@ async Task ServiceBusProcessorTransactionEvents_ProcessMessageAsync(ProcessMessa
 
 serviceBusProcessorTransactionEvents.StartProcessingAsync();
 
-for (var i = 0; i < 100; i++)
-{
-    serviceBus.Publish(new OrderEvent
-    {
-        Order = Order.Create(Guid.NewGuid().ToString()),
-        Transaction = null,
-        Type = OrderEventType.Create,
-    }).GetAwaiter().GetResult();
-}
+//for (var i = 0; i < 100; i++)
+//{
+//    serviceBus.Publish(new OrderEvent
+//    {
+//        Order = Order.Create(Guid.NewGuid().ToString()),
+//        Transaction = null,
+//        Type = OrderEventType.Create,
+//    }).GetAwaiter().GetResult();
+//}
 
 serviceBus.Publish(new OrderEvent
 {

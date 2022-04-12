@@ -17,7 +17,7 @@
 
             if (_random.NextInt64(0, 1000) < 200)
             {
-                throw new Exception($"ChaosMonkey.Do");
+                // throw new Exception($"ChaosMonkey.Do");
             }
         }
     }
