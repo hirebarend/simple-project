@@ -31,12 +31,17 @@
 
         public bool CanComplete()
         {
-            return IsProcessing();
+            return IsProcessed();
         }
 
         public bool CanProcess()
         {
             return IsPending();
+        }
+
+        public bool CanProcessed()
+        {
+            return IsProcessing();
         }
 
         public bool Cancel()
@@ -78,6 +83,11 @@
             return State == OrderState.Pending;
         }
 
+        public bool IsProcessed()
+        {
+            return State == OrderState.Processed;
+        }
+
         public bool IsProcessing()
         {
             return State == OrderState.Processing;
@@ -91,6 +101,18 @@
             }
 
             State = OrderState.Processing;
+
+            return true;
+        }
+
+        public bool Processed()
+        {
+            if (!CanProcessed())
+            {
+                return false;
+            }
+
+            State = OrderState.Processed;
 
             return true;
         }

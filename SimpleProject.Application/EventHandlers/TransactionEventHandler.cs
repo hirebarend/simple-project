@@ -53,8 +53,6 @@ namespace SimpleProject.Application.EventHandlers
 
                     break;
                 case TransactionEventType.Settled:
-                    await HandleSettled(transactionEvent);
-
                     break;
                 case TransactionEventType.Void:
                     await HandleVoid(transactionEvent);
@@ -98,16 +96,6 @@ namespace SimpleProject.Application.EventHandlers
         public async Task HandleSettle(TransactionEvent transactionEvent)
         {
             await _transactionService.Settle(transactionEvent.Order, transactionEvent.Transaction);
-        }
-
-        public async Task HandleSettled(TransactionEvent transactionEvent)
-        {
-            await _serviceBus.Publish(new OrderEvent
-            {
-                Order = transactionEvent.Order,
-                Transaction = transactionEvent.Transaction,
-                Type = OrderEventType.Complete,
-            });
         }
 
         public async Task HandleVoid(TransactionEvent transactionEvent)

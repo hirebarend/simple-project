@@ -121,6 +121,30 @@ namespace SimpleProject.Application.Services
 
             var result = await _productGateway.Purchase(order.Reference);
 
+            if (!order.Processed())
+            {
+                // TODO
+
+                return;
+            }
+
+            order = await _orderRepository.Update(order);
+
+            if (!order.IsProcessed())
+            {
+                // TODO
+
+                return;
+            }
+
+            await _serviceBus.Publish(new OrderEvent
+            {
+                Order = order,
+                Transaction = transaction,
+                Type = OrderEventType.Processed,
+            });
+
+
             if (!result)
             {
                 await _serviceBus.Publish(new OrderEvent
@@ -137,7 +161,7 @@ namespace SimpleProject.Application.Services
             {
                 Order = order,
                 Transaction = transaction,
-                Type = OrderEventType.Processed,
+                Type = OrderEventType.Complete,
             });
         }
     }

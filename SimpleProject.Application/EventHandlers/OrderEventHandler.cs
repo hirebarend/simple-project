@@ -63,19 +63,6 @@ namespace SimpleProject.Application.EventHandlers
                 return;
             }
 
-            // Step 8
-            if (orderEvent.Type == OrderEventType.Processed)
-            {
-                await _serviceBus.Publish(new TransactionEvent
-                {
-                    Order = orderEvent.Order,
-                    Transaction = orderEvent.Transaction,
-                    Type = TransactionEventType.Settle,
-                });
-
-                return;
-            }
-
             // Step 11
             if (orderEvent.Type == OrderEventType.Complete)
             {
@@ -88,6 +75,13 @@ namespace SimpleProject.Application.EventHandlers
             if (orderEvent.Type == OrderEventType.Completed)
             {
                 Console.WriteLine($"[Order] {orderEvent.Order.State} {orderEvent.Order.Updated.Subtract(orderEvent.Order.Created).TotalMilliseconds}");
+
+                await _serviceBus.Publish(new TransactionEvent
+                {
+                    Order = orderEvent.Order,
+                    Transaction = orderEvent.Transaction,
+                    Type = TransactionEventType.Settle,
+                });
 
                 return;
             }
