@@ -4,6 +4,7 @@
     {
         Pending,
         Processing,
+        Processed,
         Completed,
         Cancelled,
         Refunded,

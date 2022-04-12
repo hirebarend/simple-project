@@ -1,5 +1,4 @@
-﻿
-using SimpleProject.Application.Interfaces;
+﻿using SimpleProject.Application.Interfaces;
 using SimpleProject.Application.Services;
 using SimpleProject.Domain.Order;
 using SimpleProject.Domain.Transaction;
@@ -27,68 +26,93 @@ namespace SimpleProject.Application.EventHandlers
         {
             Console.WriteLine($"[TransactionEvent] {transactionEvent.Type} {transactionEvent.Transaction.Reference} {transactionEvent.Transaction.State}");
 
-            // Step 3
-            if (transactionEvent.Type == TransactionEventType.Create)
+            switch (transactionEvent.Type)
             {
-                await _transactionService.Create(transactionEvent.Order, transactionEvent.Transaction);
+                case TransactionEventType.Authorize:
+                    await HandleAuthorize(transactionEvent);
 
-                return;
+                    break;
+                case TransactionEventType.Authorized:
+                    await HandleAuthorized(transactionEvent);
+
+                    break;
+                case TransactionEventType.Cancel:
+                    break;
+                case TransactionEventType.Cancelled:
+                    break;
+                case TransactionEventType.Create:
+                    await HandleCreate(transactionEvent);
+
+                    break;
+                case TransactionEventType.Created:
+                    await HandleCreated(transactionEvent);
+
+                    break;
+                case TransactionEventType.Settle:
+                    await HandleSettle(transactionEvent);
+
+                    break;
+                case TransactionEventType.Settled:
+                    await HandleSettled(transactionEvent);
+
+                    break;
+                case TransactionEventType.Void:
+                    await HandleVoid(transactionEvent);
+
+                    break;
+                case TransactionEventType.Voided:
+                    break;
             }
+        }
 
-            // Step 4
-            if (transactionEvent.Type == TransactionEventType.Created)
+        public async Task HandleAuthorize(TransactionEvent transactionEvent)
+        {
+            await _transactionService.Authorize(transactionEvent.Order, transactionEvent.Transaction);
+        }
+
+        public async Task HandleAuthorized(TransactionEvent transactionEvent)
+        {
+            await _serviceBus.Publish(new OrderEvent
             {
-                await _serviceBus.Publish(new TransactionEvent
-                {
-                    Order = transactionEvent.Order,
-                    Transaction = transactionEvent.Transaction,
-                    Type = TransactionEventType.Authorize,
-                });
+                Order = transactionEvent.Order,
+                Transaction = transactionEvent.Transaction,
+                Type = OrderEventType.Process,
+            });
+        }
 
-                return;
-            }
+        public async Task HandleCreate(TransactionEvent transactionEvent)
+        {
+            await _transactionService.Create(transactionEvent.Order, transactionEvent.Transaction);
+        }
 
-            // Step 5
-            if (transactionEvent.Type == TransactionEventType.Authorize)
+        public async Task HandleCreated(TransactionEvent transactionEvent)
+        {
+            await _serviceBus.Publish(new TransactionEvent
             {
-                await _transactionService.Authorize(transactionEvent.Order, transactionEvent.Transaction);
+                Order = transactionEvent.Order,
+                Transaction = transactionEvent.Transaction,
+                Type = TransactionEventType.Authorize,
+            });
+        }
 
-                return;
-            }
+        public async Task HandleSettle(TransactionEvent transactionEvent)
+        {
+            await _transactionService.Settle(transactionEvent.Order, transactionEvent.Transaction);
+        }
 
-            // Step 6
-            if (transactionEvent.Type == TransactionEventType.Authorized)
+        public async Task HandleSettled(TransactionEvent transactionEvent)
+        {
+            await _serviceBus.Publish(new OrderEvent
             {
-                await _serviceBus.Publish(new OrderEvent
-                {
-                    Order = transactionEvent.Order,
-                    Transaction = transactionEvent.Transaction,
-                    Type = OrderEventType.Process,
-                });
+                Order = transactionEvent.Order,
+                Transaction = transactionEvent.Transaction,
+                Type = OrderEventType.Complete,
+            });
+        }
 
-                return;
-            }
-
-            // Step 9
-            if (transactionEvent.Type == TransactionEventType.Settle)
-            {
-                await _transactionService.Settle(transactionEvent.Order, transactionEvent.Transaction);
-
-                return;
-            }
-
-            // Step 10
-            if (transactionEvent.Type == TransactionEventType.Settled)
-            {
-                await _serviceBus.Publish(new OrderEvent
-                {
-                    Order = transactionEvent.Order,
-                    Transaction = transactionEvent.Transaction,
-                    Type = OrderEventType.Complete,
-                });
-
-                return;
-            }
+        public async Task HandleVoid(TransactionEvent transactionEvent)
+        {
+            await _transactionService.Void(transactionEvent.Order, transactionEvent.Transaction);
         }
     }
 }

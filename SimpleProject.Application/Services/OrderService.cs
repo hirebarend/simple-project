@@ -23,6 +23,32 @@ namespace SimpleProject.Application.Services
             _serviceBus = serviceBus ?? throw new ArgumentNullException(nameof(serviceBus));
         }
 
+        public async Task Cancel(Order order, Transaction transaction)
+        {
+            if (!order.Cancel())
+            {
+                // TODO
+
+                return;
+            }
+
+            order = await _orderRepository.Update(order);
+
+            if (!order.IsCancelled())
+            {
+                // TODO
+
+                return;
+            }
+
+            await _serviceBus.Publish(new OrderEvent
+            {
+                Order = order,
+                Transaction = transaction,
+                Type = OrderEventType.Cancelled,
+            });
+        }
+
         public async Task Complete(Order order, Transaction transaction)
         {
             if (!order.Complete())
@@ -77,7 +103,6 @@ namespace SimpleProject.Application.Services
                 return;
             }
 
-      
             order = await _orderRepository.Update(order);
 
             if (!order.IsProcessing())
@@ -87,26 +112,23 @@ namespace SimpleProject.Application.Services
                 return;
             }
 
-            //await _serviceBus.Publish(new OrderEvent
-            //{
-            //    Order = order,
-            //    Transaction = transaction,
-            //    Type = OrderEventType.Processing,
-            //});
-
-
-            // TODO
+            await _serviceBus.Publish(new OrderEvent
+            {
+                Order = order,
+                Transaction = transaction,
+                Type = OrderEventType.Processing,
+            });
 
             var result = await _productGateway.Purchase(order.Reference);
 
             if (!result)
             {
-                //await _serviceBus.Publish(new OrderEvent
-                //{
-                //    Order = order,
-                //    Transaction = transaction,
-                //    Type = OrderEventType.Complete,
-                //});
+                await _serviceBus.Publish(new OrderEvent
+                {
+                    Order = order,
+                    Transaction = transaction,
+                    Type = OrderEventType.Cancel,
+                });
 
                 return;
             }

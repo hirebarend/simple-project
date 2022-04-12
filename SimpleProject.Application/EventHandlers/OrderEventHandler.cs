@@ -91,6 +91,25 @@ namespace SimpleProject.Application.EventHandlers
 
                 return;
             }
+
+            if (orderEvent.Type == OrderEventType.Cancel)
+            {
+                await _orderService.Cancel(orderEvent.Order, orderEvent.Transaction);
+
+                return;
+            }
+
+            if (orderEvent.Type == OrderEventType.Cancelled)
+            {
+                await _serviceBus.Publish(new TransactionEvent
+                {
+                    Order = orderEvent.Order,
+                    Transaction = orderEvent.Transaction,
+                    Type = TransactionEventType.Void,
+                });
+
+                return;
+            }
         }
     }
 }

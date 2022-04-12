@@ -10,7 +10,7 @@
         Settled,
         Void,
         Voided,
-        Cancell,
+        Cancel,
         Cancelled
     }
 }

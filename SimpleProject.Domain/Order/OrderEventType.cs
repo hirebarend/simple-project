@@ -8,6 +8,8 @@
         Processing,
         Processed,
         Complete,
-        Completed
+        Completed,
+        Cancel,
+        Cancelled,
     }
 }

@@ -97,25 +97,25 @@ async Task ServiceBusProcessorTransactionEvents_ProcessMessageAsync(ProcessMessa
 
 serviceBusProcessorTransactionEvents.StartProcessingAsync();
 
-var count = 0;
+//var count = 0;
 
-while (count < 150)
-{
-    try
-    {
-        serviceBus.Publish(new OrderEvent
-        {
-            Order = Order.Create(Guid.NewGuid().ToString()),
-            Transaction = null,
-            Type = OrderEventType.Create,
-        }).GetAwaiter().GetResult();
+//while (count < 150)
+//{
+//    try
+//    {
+//        serviceBus.Publish(new OrderEvent
+//        {
+//            Order = Order.Create(Guid.NewGuid().ToString()),
+//            Transaction = null,
+//            Type = OrderEventType.Create,
+//        }).GetAwaiter().GetResult();
 
-        count++;
-    }
-    catch
-    {
-    }
-}
+//        count++;
+//    }
+//    catch
+//    {
+//    }
+//}
 
 serviceBus.Publish(new OrderEvent
 {

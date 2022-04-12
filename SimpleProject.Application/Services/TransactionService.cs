@@ -92,5 +92,33 @@ namespace SimpleProject.Application.Services
                 Type = TransactionEventType.Settled,
             });
         }
+
+        public async Task Void(Order order, Transaction transaction)
+        {
+            if (transaction.State != TransactionState.Authorized)
+            {
+                // TODO
+
+                return;
+            }
+
+            transaction.State = TransactionState.Voided;
+
+            transaction = await _transactionRepository.Update(transaction);
+
+            if (transaction.State != TransactionState.Voided)
+            {
+                // TODO
+
+                return;
+            }
+
+            await _serviceBus.Publish(new TransactionEvent
+            {
+                Order = order,
+                Transaction = transaction,
+                Type = TransactionEventType.Voided,
+            });
+        }
     }
 }
