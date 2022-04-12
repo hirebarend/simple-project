@@ -46,6 +46,34 @@ namespace SimpleProject.Application.Services
             });
         }
 
+        public async Task Cancel(Order order, Transaction transaction)
+        {
+            if (transaction.State != TransactionState.Pending)
+            {
+                // TODO
+
+                return;
+            }
+
+            transaction.State = TransactionState.Pending;
+
+            transaction = await _transactionRepository.Update(transaction);
+
+            if (transaction.State != TransactionState.Cancelled)
+            {
+                // TODO
+
+                return;
+            }
+
+            await _serviceBus.Publish(new TransactionEvent
+            {
+                Order = order,
+                Transaction = transaction,
+                Type = TransactionEventType.Cancelled,
+            });
+        }
+
         public async Task Create(Order order, Transaction transaction)
         {
             transaction = await _transactionRepository.Insert(transaction);
