@@ -1,5 +1,4 @@
-﻿
-using SimpleProject.Application.Interfaces;
+﻿using SimpleProject.Application.Interfaces;
 using SimpleProject.Application.Services;
 using SimpleProject.Domain.Order;
 using SimpleProject.Domain.Transaction;
@@ -27,83 +26,91 @@ namespace SimpleProject.Application.EventHandlers
         {
             Console.WriteLine($"[OrderEvent] {orderEvent.Type} {orderEvent.Order.Reference} {orderEvent.Order.State}");
 
-            if (orderEvent.Type == OrderEventType.Complete)
+            switch (orderEvent.Type)
             {
-                await _orderService.Complete(orderEvent.Order, orderEvent.Transaction);
+                case OrderEventType.Cancel:
+                    await HandleCancel(orderEvent);
 
-                return;
+                    break;
+                case OrderEventType.Cancelled:
+                    await HandleCancelled(orderEvent);
+
+                    break;
+                case OrderEventType.Complete:
+                    await HandleComplete(orderEvent);
+
+                    break;
+                case OrderEventType.Completed:
+                    await HandleCompleted(orderEvent);
+
+                    break;
+                case OrderEventType.Create:
+                    await HandleCreate(orderEvent);
+
+                    break;
+                case OrderEventType.Created:
+                    await HandleCreated(orderEvent);
+
+                    break;
+                case OrderEventType.Process:
+                    await HandleProcess(orderEvent);
+
+                    break;
+                case OrderEventType.Processed:
+                    break;
+                case OrderEventType.Processing:
+                    break;
             }
+        }
 
-            // Step 1
-            if (orderEvent.Type == OrderEventType.Create)
+        public async Task HandleCancel(OrderEvent orderEvent)
+        {
+            await _orderService.Cancel(orderEvent.Order, orderEvent.Transaction);
+        }
+
+        public async Task HandleCancelled(OrderEvent orderEvent)
+        {
+            await _serviceBus.Publish(new TransactionEvent
             {
-                await _orderService.Create(orderEvent.Order, orderEvent.Transaction);
+                Order = orderEvent.Order,
+                Transaction = orderEvent.Transaction,
+                Type = TransactionEventType.Void,
+            });
+        }
 
-                return;
-            }
+        public async Task HandleComplete(OrderEvent orderEvent)
+        {
+            await _orderService.Complete(orderEvent.Order, orderEvent.Transaction);
+        }
 
-            // Step 2
-            if (orderEvent.Type == OrderEventType.Created)
+        public async Task HandleCompleted(OrderEvent orderEvent)
+        {
+            await _serviceBus.Publish(new TransactionEvent
             {
-                await _serviceBus.Publish(new TransactionEvent
-                {
-                    Order = orderEvent.Order,
-                    Transaction = Transaction.Create(orderEvent.Order.Reference),
-                    Type = TransactionEventType.Create,
-                });
+                Order = orderEvent.Order,
+                Transaction = orderEvent.Transaction,
+                Type = TransactionEventType.Settle,
+            });
+        }
 
-                return;
-            }
+        public async Task HandleCreate(OrderEvent orderEvent)
+        {
+            await _orderService.Create(orderEvent.Order, orderEvent.Transaction);
+        }
 
-            // Step 7
-            if (orderEvent.Type == OrderEventType.Process)
+        public async Task HandleCreated(OrderEvent orderEvent)
+        {
+            await _serviceBus.Publish(new TransactionEvent
             {
-                await _orderService.Process(orderEvent.Order, orderEvent.Transaction);
+                Order = orderEvent.Order,
+                Transaction = Transaction.Create(orderEvent.Order.Reference),
+                Type = TransactionEventType.Create,
+            });
+        }
 
-                return;
-            }
-
-            // Step 11
-            if (orderEvent.Type == OrderEventType.Complete)
-            {
-                await _orderService.Complete(orderEvent.Order, orderEvent.Transaction);
-
-                return;
-            }
-
-            // Step 12
-            if (orderEvent.Type == OrderEventType.Completed)
-            {
-                Console.WriteLine($"[Order] {orderEvent.Order.State} {orderEvent.Order.Updated.Subtract(orderEvent.Order.Created).TotalMilliseconds}");
-
-                await _serviceBus.Publish(new TransactionEvent
-                {
-                    Order = orderEvent.Order,
-                    Transaction = orderEvent.Transaction,
-                    Type = TransactionEventType.Settle,
-                });
-
-                return;
-            }
-
-            if (orderEvent.Type == OrderEventType.Cancel)
-            {
-                await _orderService.Cancel(orderEvent.Order, orderEvent.Transaction);
-
-                return;
-            }
-
-            if (orderEvent.Type == OrderEventType.Cancelled)
-            {
-                await _serviceBus.Publish(new TransactionEvent
-                {
-                    Order = orderEvent.Order,
-                    Transaction = orderEvent.Transaction,
-                    Type = TransactionEventType.Void,
-                });
-
-                return;
-            }
+        public async Task HandleProcess(OrderEvent orderEvent)
+        {
+            await _orderService.Process(orderEvent.Order, orderEvent.Transaction);
         }
     }
 }

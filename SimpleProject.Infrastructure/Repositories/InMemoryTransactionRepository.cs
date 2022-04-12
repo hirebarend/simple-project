@@ -7,9 +7,11 @@ namespace SimpleProject.Infrastructure.Repositories
 {
     public class InMemoryTransactionRepository : ITransactionRepository
     {
+        protected long _balance = 0;
+
         protected object _lock = new object();
 
-        public readonly IList<Transaction> _transactions = new List<Transaction>();
+        protected readonly IList<Transaction> _transactions = new List<Transaction>();
 
         public Task<Transaction> Insert(Transaction transaction)
         {
@@ -50,7 +52,19 @@ namespace SimpleProject.Infrastructure.Repositories
                     return Task.FromResult(transactionExisting);
                 }
 
-                transactionExisting.Reference = transaction.Reference;
+                if (transaction.State == TransactionState.Authorized)
+                {
+                    _balance += transaction.Amount;
+
+                    Console.WriteLine($"_balance: {_balance}");
+                } else if (transaction.State == TransactionState.Voided)
+                {
+                    _balance -= transaction.Amount;
+
+                    Console.WriteLine($"_balance: {_balance}");
+                }
+
+                    transactionExisting.Reference = transaction.Reference;
                 transactionExisting.State = transaction.State;
                 transactionExisting.Version = transaction.Version + 1;
                 transactionExisting.Updated = DateTimeOffset.UtcNow;
