@@ -44,7 +44,11 @@ namespace SimpleProject.Infrastructure.Repositories
 
                 if (transactionExisting == null)
                 {
-                    throw new BusinessException($"unable to find transaction with reference, '{transaction.Reference}'");
+                    _transactions.Add(transaction);
+
+                    return Task.FromResult(transaction);
+
+                    // throw new BusinessException($"unable to find transaction with reference, '{transaction.Reference}'");
                 }
 
                 if (transactionExisting.Version != transaction.Version)

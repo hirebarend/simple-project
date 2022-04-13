@@ -49,7 +49,11 @@ namespace SimpleProject.Infrastructure.Repositories
 
                 if (orderExisting == null)
                 {
-                    throw new BusinessException($"unable to find order with reference, '{order.Reference}'");
+                    _orders.Add(order);
+
+                    return Task.FromResult(order);
+
+                    // throw new BusinessException($"unable to find order with reference, '{order.Reference}'");
                 }
 
                 if (orderExisting.Version != order.Version)

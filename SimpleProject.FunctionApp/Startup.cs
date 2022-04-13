@@ -1,6 +1,7 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using SimpleProject.Application.EventHandlers;
 using SimpleProject.Application.Gateways;
@@ -10,6 +11,7 @@ using SimpleProject.Application.Services;
 using SimpleProject.Infrastructure.InMemory;
 using SimpleProject.Infrastructure.Interfaces;
 using SimpleProject.Infrastructure.MongoDb;
+using SimpleProject.Infrastructure.Repositories;
 
 [assembly: FunctionsStartup(typeof(SimpleProject.FunctionApp.Startup))]
 namespace SimpleProject.FunctionApp
@@ -34,11 +36,15 @@ namespace SimpleProject.FunctionApp
 
             builder.Services.AddSingleton<IServiceBus, AzureServiceBus>();
 
-            builder.Services.AddSingleton<IOrderRepository>(new MongoDbOrderRepository(mongoCollectionOrder));
+            // builder.Services.AddSingleton<IOrderRepository>(x => new MongoDbOrderRepository(x.GetRequiredService<ILogger<MongoDbOrderRepository>>(), mongoCollectionOrder));
+
+            builder.Services.AddSingleton<IOrderRepository, InMemoryOrderRepository>();
 
             builder.Services.AddSingleton<IProductGatewayLogRepository>(new InMemoryProductGatewayLogRepository());
 
-            builder.Services.AddSingleton<ITransactionRepository>(new MongoDbTransactionRepository(mongoCollectionTransaction));
+            // builder.Services.AddSingleton<ITransactionRepository>(new MongoDbTransactionRepository(mongoCollectionTransaction));
+
+            builder.Services.AddSingleton<ITransactionRepository, InMemoryTransactionRepository>();
 
             builder.Services.AddSingleton<OrderService>();
 
