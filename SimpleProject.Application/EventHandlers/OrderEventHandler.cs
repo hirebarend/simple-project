@@ -70,6 +70,11 @@ namespace SimpleProject.Application.EventHandlers
 
         public async Task HandleCancelled(OrderEvent orderEvent)
         {
+            if (orderEvent.Transaction == null)
+            {
+                return;
+            }
+
             if (orderEvent.Transaction.State == TransactionState.Authorized)
             {
                 await _serviceBus.Publish(new TransactionEvent

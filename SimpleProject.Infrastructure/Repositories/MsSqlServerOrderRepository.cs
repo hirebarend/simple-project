@@ -24,6 +24,11 @@ namespace SimpleProject.Infrastructure.Repositories
             }
         }
 
+        public Task<Order?> Find(string reference)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Order> Insert(Order order)
         {
             ChaosMonkey.Do();

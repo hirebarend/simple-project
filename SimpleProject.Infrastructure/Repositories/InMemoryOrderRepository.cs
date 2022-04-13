@@ -11,6 +11,13 @@ namespace SimpleProject.Infrastructure.Repositories
 
         public readonly IList<Order> _orders = new List<Order>();
 
+        public Task<Order?> Find(string reference)
+        {
+            var order = _orders.FirstOrDefault(x => x.Reference == reference);
+
+            return Task.FromResult(order);
+        }
+
         public Task<Order> Insert(Order order)
         {
             lock (_lock)
