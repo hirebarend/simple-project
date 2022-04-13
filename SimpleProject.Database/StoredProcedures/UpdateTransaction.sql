@@ -22,7 +22,7 @@ AS BEGIN
 				BEGIN;
 					ROLLBACK TRAN;
 					
-					SELECT TOP (1) * FROM [dbo].[Orders]
+					SELECT TOP (1) * FROM [dbo].[Transactions]
 					WHERE [Reference] = @reference;
 
 					RETURN;

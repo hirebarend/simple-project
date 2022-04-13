@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleProject.Application",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleProject.Shared", "SimpleProject.Shared\SimpleProject.Shared.csproj", "{30B6C13A-83C3-4921-8871-DDDB899026D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleProject.FunctionApp", "SimpleProject.FunctionApp\SimpleProject.FunctionApp.csproj", "{DCF6672C-40F0-40DC-9D9A-739C1051DD67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleProject.FunctionApp", "SimpleProject.FunctionApp\SimpleProject.FunctionApp.csproj", "{DCF6672C-40F0-40DC-9D9A-739C1051DD67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
