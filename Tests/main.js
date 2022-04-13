@@ -10,7 +10,7 @@ const uuid = require("uuid");
 
   const array = [];
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 10; i++) {
     // 18
     array.push(execute());
   }
@@ -27,12 +27,12 @@ async function execute() {
     const reference = uuid.v4();
 
     const responsePost = await axios.post(
-      `http://localhost:7071/api/Order/${reference}`
+      `https://function-app-5695.azurewebsites.net/api/Order/${reference}`
     );
 
     while (true) {
       const responseGet = await axios.get(
-        `http://localhost:7071/api/Order/${reference}`
+        `https://function-app-5695.azurewebsites.net/api/Order/${reference}`
       );
 
       if (
