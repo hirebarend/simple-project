@@ -4,18 +4,17 @@ const uuid = require("uuid");
 (async () => {
   const timestamp1 = new Date().getTime();
 
-  //   for (let i = 0; i < 50; i++) { // 166
-  //     await execute();
-  //   }
+    for (let i = 0; i < 100; i++) {
+      await execute();
+    }
 
-  const array = [];
+  // const array = [];
 
-  for (let i = 0; i < 10; i++) {
-    // 18
-    array.push(execute());
-  }
+  // for (let i = 0; i < 10; i++) {
+  //   array.push(execute());
+  // }
 
-  await Promise.all(array);
+  // await Promise.all(array);
 
   const timestamp2 = new Date().getTime();
 
@@ -29,6 +28,8 @@ async function execute() {
     const responsePost = await axios.post(
       `https://function-app-5695.azurewebsites.net/api/Order/${reference}`
     );
+
+    console.log(responsePost.data)
 
     while (true) {
       const responseGet = await axios.get(
