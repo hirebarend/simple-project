@@ -1,5 +1,7 @@
 # Simple Project
 
+![alt text](/Documentation/Images/architecture-diagram-version-1.png)
+
 ## Table Of Contents
 
 - [Introduction](#introduction)
