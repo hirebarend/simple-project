@@ -16,15 +16,17 @@ namespace SimpleProject.Infrastructure.MongoDb
 
         public async Task<Order> Insert(Order order)
         {
+            var orderDataTransferObject = DataTransferObjects.Order.FromDomain(order);
+
             try
             {
-                await _mongoCollection.InsertOneAsync(DataTransferObjects.Order.FromDomain(order));
+                await _mongoCollection.InsertOneAsync(orderDataTransferObject);
 
                 return order;
             }
             catch
             {
-                var asyncCursor = await _mongoCollection.FindAsync(x => x.Reference == order.Reference);
+                var asyncCursor = await _mongoCollection.FindAsync(x => x.Reference == orderDataTransferObject.Reference);
 
                 var result = await asyncCursor.FirstAsync();
 
@@ -34,14 +36,16 @@ namespace SimpleProject.Infrastructure.MongoDb
 
         public async Task<Order> Update(Order order)
         {
-            var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == order.Reference && x.Version == order.Version, Builders<DataTransferObjects.Order>.Update.Set(x => x.State, order.State.ToString()).Inc(x => x.Version, 1));
+            var orderDataTransferObject = DataTransferObjects.Order.FromDomain(order);
+
+            var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == orderDataTransferObject.Reference && x.Version == orderDataTransferObject.Version, Builders<DataTransferObjects.Order>.Update.Set(x => x.State, orderDataTransferObject.State).Inc(x => x.Version, 1).Set(x => x.Updated, orderDataTransferObject.Updated));
 
             if (updateResult.MatchedCount == 0)
             {
-                throw new BusinessException($"unable to find order with reference, '{order.Reference}'");
+                throw new BusinessException($"unable to find order with reference, '{orderDataTransferObject.Reference}'");
             }
 
-            var asyncCursor = await _mongoCollection.FindAsync(x => x.Reference == order.Reference);
+            var asyncCursor = await _mongoCollection.FindAsync(x => x.Reference == orderDataTransferObject.Reference);
 
             var result = await asyncCursor.FirstAsync();
 

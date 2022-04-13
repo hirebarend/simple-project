@@ -26,12 +26,12 @@ namespace SimpleProject.Infrastructure.MongoDb.DataTransferObjects
             return new Transaction
             {
                 Amount = transaction.Amount,
-                Created = transaction.Created.ToString(),
+                Created = transaction.Created.ToString("o"),
                 Id = ObjectId.GenerateNewId(),
                 Reference = transaction.Reference,
                 State = transaction.State.ToString(),
                 Version = transaction.Version,
-                Updated = transaction.Updated.ToString(),
+                Updated = transaction.Updated.ToString("o"),
             };
         }
 

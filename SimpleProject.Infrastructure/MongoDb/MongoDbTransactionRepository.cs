@@ -16,15 +16,17 @@ namespace SimpleProject.Infrastructure.MongoDb
 
         public async Task<Transaction> Insert(Transaction transaction)
         {
+            var transactionDataTransferObject = DataTransferObjects.Transaction.FromDomain(transaction);
+
             try
             {
-                await _mongoCollection.InsertOneAsync(DataTransferObjects.Transaction.FromDomain(transaction));
+                await _mongoCollection.InsertOneAsync(transactionDataTransferObject);
 
                 return transaction;
             }
             catch
             {
-                var asyncCursor = await _mongoCollection.FindAsync(x => x.Reference == transaction.Reference);
+                var asyncCursor = await _mongoCollection.FindAsync(x => x.Reference == transactionDataTransferObject.Reference);
 
                 var result = await asyncCursor.FirstAsync();
 
@@ -34,14 +36,16 @@ namespace SimpleProject.Infrastructure.MongoDb
 
         public async Task<Transaction> Update(Transaction transaction)
         {
-            var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == transaction.Reference && x.Version == transaction.Version, Builders<DataTransferObjects.Transaction>.Update.Set(x => x.State, transaction.State.ToString()).Inc(x => x.Version, 1));
+            var transactionDataTransferObject = DataTransferObjects.Transaction.FromDomain(transaction);
+
+            var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == transactionDataTransferObject.Reference && x.Version == transactionDataTransferObject.Version, Builders<DataTransferObjects.Transaction>.Update.Set(x => x.State, transactionDataTransferObject.State).Inc(x => x.Version, 1).Set(x => x.Updated, transactionDataTransferObject.Updated));
 
             if (updateResult.MatchedCount == 0)
             {
-                throw new BusinessException($"unable to find order with reference, '{transaction.Reference}'");
+                throw new BusinessException($"unable to find order with reference, '{transactionDataTransferObject.Reference}'");
             }
 
-            var asyncCursor = await _mongoCollection.FindAsync(x => x.Reference == transaction.Reference);
+            var asyncCursor = await _mongoCollection.FindAsync(x => x.Reference == transactionDataTransferObject.Reference);
 
             var result = await asyncCursor.FirstAsync();
 

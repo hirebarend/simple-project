@@ -23,12 +23,12 @@ namespace SimpleProject.Infrastructure.MongoDb.DataTransferObjects
         {
             return new Order
             {
-                Created = order.Created.ToString(),
+                Created = order.Created.ToString("o"),
                 Id = ObjectId.GenerateNewId(),
                 Reference = order.Reference,
                 State = order.State.ToString(),
                 Version = order.Version,
-                Updated = order.Updated.ToString(),
+                Updated = order.Updated.ToString("o"),
             };
         }
 
