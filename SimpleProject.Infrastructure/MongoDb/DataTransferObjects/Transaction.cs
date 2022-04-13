@@ -8,16 +8,16 @@ namespace SimpleProject.Infrastructure.MongoDb.DataTransferObjects
     {
         public int Amount { get; set; }
 
-        public DateTimeOffset Created { get; set; }
+        public string Created { get; set; }
 
         [BsonId]
         public ObjectId Id { get; set; }
 
         public string Reference { get; set; }
 
-        public TransactionState State { get; set; }
+        public string State { get; set; }
 
-        public DateTimeOffset Updated { get; set; }
+        public string Updated { get; set; }
 
         public short Version { get; set; }
 
@@ -26,12 +26,12 @@ namespace SimpleProject.Infrastructure.MongoDb.DataTransferObjects
             return new Transaction
             {
                 Amount = transaction.Amount,
-                Created = transaction.Created,
+                Created = transaction.Created.ToString(),
                 Id = ObjectId.GenerateNewId(),
                 Reference = transaction.Reference,
-                State = transaction.State,
+                State = transaction.State.ToString(),
                 Version = transaction.Version,
-                Updated = transaction.Updated,
+                Updated = transaction.Updated.ToString(),
             };
         }
 
@@ -40,11 +40,11 @@ namespace SimpleProject.Infrastructure.MongoDb.DataTransferObjects
             return new Domain.Transaction.Transaction
             {
                 Amount = Amount,
-                Created = Created,
+                Created = DateTimeOffset.Parse(Created),
                 Reference = Reference,
-                State = State,
+                State = Enum.Parse<TransactionState>(State),
                 Version = Version,
-                Updated = Updated,
+                Updated = DateTimeOffset.Parse(Updated),
             };
         }
     }

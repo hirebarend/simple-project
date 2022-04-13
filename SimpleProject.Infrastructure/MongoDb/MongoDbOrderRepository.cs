@@ -34,7 +34,7 @@ namespace SimpleProject.Infrastructure.MongoDb
 
         public async Task<Order> Update(Order order)
         {
-            var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == order.Reference && x.Version == order.Version, Builders<DataTransferObjects.Order>.Update.Set(x => x.State, order.State).Inc(x => x.Version, 1));
+            var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == order.Reference && x.Version == order.Version, Builders<DataTransferObjects.Order>.Update.Set(x => x.State, order.State.ToString()).Inc(x => x.Version, 1));
 
             if (updateResult.MatchedCount == 0)
             {
