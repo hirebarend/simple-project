@@ -24,9 +24,6 @@ namespace SimpleProject.Infrastructure.Repositories
                     return Task.FromResult(orderExisting);
                 }
 
-                order.Created = DateTimeOffset.UtcNow;
-                order.Updated = DateTimeOffset.UtcNow;
-
                 _orders.Add(order);
 
                 ChaosMonkey.Do();

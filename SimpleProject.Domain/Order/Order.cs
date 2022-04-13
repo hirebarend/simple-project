@@ -53,6 +53,8 @@
 
             State = OrderState.Cancelled;
 
+            Updated = DateTimeOffset.UtcNow;
+
             return true;
         }
 
@@ -64,6 +66,8 @@
             }
 
             State = OrderState.Completed;
+
+            Updated = DateTimeOffset.UtcNow;
 
             return true;
         }
@@ -102,6 +106,8 @@
 
             State = OrderState.Processing;
 
+            Updated = DateTimeOffset.UtcNow;
+
             return true;
         }
 
@@ -113,6 +119,8 @@
             }
 
             State = OrderState.Processed;
+
+            Updated = DateTimeOffset.UtcNow;
 
             return true;
         }
