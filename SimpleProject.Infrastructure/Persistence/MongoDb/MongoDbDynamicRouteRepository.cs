@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using SimpleProject.Application.Interfaces;
 using SimpleProject.Domain.ValueObjects;
 using SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects;
@@ -16,20 +17,24 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
 
         public async Task Insert(string reference, DynamicRouteResponse dynamicRouteResponse)
         {
+            var json = System.Text.Json.JsonSerializer.Serialize(dynamicRouteResponse.Payload);
+
             await _mongoCollection.InsertOneAsync(new DynamicRoute
             {
-                Payload = dynamicRouteResponse.Payload,
-                //Reference = reference,
-                //Success = dynamicRouteResponse.Success,
+                Payload = BsonDocument.Parse(json),
+                Reference = reference,
             });
         }
 
         public async Task Insert(string reference, DynamicRouteRequest dynamicRouteRequest)
         {
+
+            var json = System.Text.Json.JsonSerializer.Serialize(dynamicRouteRequest.Payload);
+
             await _mongoCollection.InsertOneAsync(new DynamicRoute
             {
-                Payload = dynamicRouteRequest.Payload,
-                //Reference = reference,
+                Payload = BsonDocument.Parse(json),
+                Reference = reference,
             });
         }
     }
