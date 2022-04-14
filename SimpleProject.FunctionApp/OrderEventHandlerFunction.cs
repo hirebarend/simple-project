@@ -1,7 +1,7 @@
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using SimpleProject.Application.EventHandlers;
-using SimpleProject.Domain.Order;
+using SimpleProject.Domain.Events;
 using System;
 using System.Threading.Tasks;
 

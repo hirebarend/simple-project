@@ -4,8 +4,10 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using SimpleProject.Application.Interfaces;
-using SimpleProject.Domain.Order;
-using SimpleProject.Infrastructure.Interfaces;
+using SimpleProject.Domain.Entities;
+using SimpleProject.Domain.Enums;
+using SimpleProject.Domain.Events;
+using SimpleProject.Domain.ValueObjects;
 using System;
 using System.Threading.Tasks;
 
@@ -41,8 +43,18 @@ namespace SimpleProject.FunctionApp
             {
                 var orderEvent = new OrderEvent
                 {
+                    Account = new Account
+                    {
+                        Reference = Guid.NewGuid().ToString(), // TODO
+                    },
+                    DynamicRouteRequest = new DynamicRouteRequest
+                    {
+                        Method = "GET",
+                        Payload = null,
+                        Url = "http://data.fixer.io/api/latest?access_key=eadd3f04a3179173fe19955aeac8fb01"
+                    },
                     Order = Order.Create(reference),
-                    Transaction = null,
+                    Transaction = Transaction.Create(10, reference),
                     Type = OrderEventType.Create,
                 };
 

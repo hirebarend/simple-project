@@ -1,5 +1,4 @@
-﻿using SimpleProject.Domain.Order;
-using SimpleProject.Domain.Transaction;
+﻿using SimpleProject.Domain.Events;
 
 namespace SimpleProject.Application.Interfaces
 {

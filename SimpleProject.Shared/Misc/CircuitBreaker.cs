@@ -10,11 +10,6 @@ namespace SimpleProject.Shared.Misc
 
         protected CircuitBreakerState _state = CircuitBreakerState.Closed;
 
-        public void Close()
-        {
-            _state = CircuitBreakerState.Closed;
-        }
-
         public async Task<T> Execute<T>(Func<Task<T>> func)
         {
             var monitorTryEnter = false;
@@ -31,7 +26,7 @@ namespace SimpleProject.Shared.Misc
 
                         var result = await func();
 
-                        Close();
+                        Reset();
 
                         return result;
                     }
@@ -61,6 +56,8 @@ namespace SimpleProject.Shared.Misc
 
         public void Reset()
         {
+            _lastException = null;
+
             _state = CircuitBreakerState.Closed;
         }
 

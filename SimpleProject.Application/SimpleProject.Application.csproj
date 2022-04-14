@@ -12,8 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimpleProject.Domain\SimpleProject.Domain.csproj" />
-    <ProjectReference Include="..\SimpleProject.Infrastructure\SimpleProject.Infrastructure.csproj" />
-    <ProjectReference Include="..\SimpleProject.Shared\SimpleProject.Shared.csproj" />
   </ItemGroup>
 
 </Project>

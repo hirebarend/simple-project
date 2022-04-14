@@ -3,13 +3,11 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using SimpleProject.Application.EventHandlers;
-using SimpleProject.Application.Gateways;
 using SimpleProject.Application.Interfaces;
-using SimpleProject.Application.ServiceBuses;
-using SimpleProject.Application.Services;
-using SimpleProject.Infrastructure.InMemory;
-using SimpleProject.Infrastructure.Interfaces;
-using SimpleProject.Infrastructure.MongoDb;
+using SimpleProject.Infrastructure.Gateways;
+using SimpleProject.Infrastructure.Persistence.MongoDb;
+using SimpleProject.Infrastructure.ServiceBuses;
+using SimpleProject.Infrastructure.Services;
 
 [assembly: FunctionsStartup(typeof(SimpleProject.FunctionApp.Startup))]
 namespace SimpleProject.FunctionApp
@@ -26,9 +24,11 @@ namespace SimpleProject.FunctionApp
 
             var mongoDatabase = mongoClient.GetDatabase("simple-project");
 
-            var mongoCollectionOrder = mongoDatabase.GetCollection<Infrastructure.MongoDb.DataTransferObjects.Order>("orders");
+            var mongoCollectionDynamic = mongoDatabase.GetCollection<dynamic>("dynamic");
 
-            var mongoCollectionTransaction = mongoDatabase.GetCollection<Infrastructure.MongoDb.DataTransferObjects.Transaction>("transactions");
+            var mongoCollectionOrder = mongoDatabase.GetCollection<Infrastructure.Persistence.MongoDb.DataTransferObjects.Order>("orders");
+
+            var mongoCollectionTransaction = mongoDatabase.GetCollection<Infrastructure.Persistence.MongoDb.DataTransferObjects.Transaction>("transactions");
 
             var serviceBusClient = new ServiceBusClient(configuration["AZURE_SERVICE_BUS_CONNECTION_STRING"]);
 
@@ -36,21 +36,17 @@ namespace SimpleProject.FunctionApp
 
             builder.Services.AddSingleton<IServiceBus, AzureServiceBus>();
 
+            builder.Services.AddSingleton<IDynamicRouteRepository>(new MongoDbDynamicRouteRepository(mongoCollectionDynamic));
+
             builder.Services.AddSingleton<IOrderRepository>(x => new MongoDbOrderRepository(mongoCollectionOrder));
 
-            // builder.Services.AddSingleton<IOrderRepository, InMemoryOrderRepository>();
-
-            builder.Services.AddSingleton<IProductGatewayLogRepository>(new InMemoryProductGatewayLogRepository());
-
             builder.Services.AddSingleton<ITransactionRepository>(new MongoDbTransactionRepository(mongoCollectionTransaction));
-
-            // builder.Services.AddSingleton<ITransactionRepository, InMemoryTransactionRepository>();
 
             builder.Services.AddSingleton<OrderService>();
 
             builder.Services.AddSingleton<TransactionService>();
 
-            builder.Services.AddSingleton<ProductGateway>();
+            builder.Services.AddSingleton<DynamicRoutingGateway>();
 
             builder.Services.AddSingleton<OrderEventHandler>();
 

@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SimpleProject.Application\SimpleProject.Application.csproj" />
+    <ProjectReference Include="..\SimpleProject.Infrastructure\SimpleProject.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
