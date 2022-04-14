@@ -19,7 +19,7 @@ namespace SimpleProject.Infrastructure.Gateways
         {
             try
             {
-                await _dynamicRouteRepository.Insert(reference, dynamicRouteRequest);
+                // await _dynamicRouteRepository.Insert(reference, dynamicRouteRequest);
 
                 using (var httpClient = new HttpClient())
                 {

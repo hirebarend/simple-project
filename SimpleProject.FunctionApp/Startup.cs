@@ -27,7 +27,7 @@ namespace SimpleProject.FunctionApp
             var mongoCollectionObjects = mongoDatabase.GetCollection<object>("objects");
 
             var mongoCollectionOrder = mongoDatabase.GetCollection<Infrastructure.Persistence.MongoDb.DataTransferObjects.Order>("orders");
-
+            
             var mongoCollectionTransaction = mongoDatabase.GetCollection<Infrastructure.Persistence.MongoDb.DataTransferObjects.Transaction>("transactions");
 
             var serviceBusClient = new ServiceBusClient(configuration["AZURE_SERVICE_BUS_CONNECTION_STRING"]);
