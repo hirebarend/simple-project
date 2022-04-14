@@ -15,12 +15,18 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
 
         public async Task Insert(string reference, DynamicRouteResponse dynamicRouteResponse)
         {
-            await _mongoCollection.InsertOneAsync(dynamicRouteResponse);
+            await _mongoCollection.InsertOneAsync(new
+            {
+                json = System.Text.Json.JsonSerializer.Serialize(dynamicRouteResponse),
+            });
         }
 
         public async Task Insert(string reference, DynamicRouteRequest dynamicRouteRequest)
         {
-            await _mongoCollection.InsertOneAsync(dynamicRouteRequest);
+            await _mongoCollection.InsertOneAsync(new
+            {
+                json = System.Text.Json.JsonSerializer.Serialize(dynamicRouteRequest),
+            });
         }
     }
 }
