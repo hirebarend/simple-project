@@ -2,7 +2,6 @@
 using SimpleProject.Application.Interfaces;
 using SimpleProject.Domain.Entities;
 using SimpleProject.Domain.Exceptions;
-using SimpleProject.Shared.Misc;
 using System.Data.SqlClient;
 
 namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
@@ -31,8 +30,6 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
 
         public async Task<Order> Insert(Order order)
         {
-            ChaosMonkey.Do();
-
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 return await sqlConnection.QueryFirstAsync<Order>("[dbo].[InsertOrder]", new
@@ -45,8 +42,6 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
 
         public async Task<Order> Update(Order order)
         {
-            ChaosMonkey.Do();
-
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 var result = await sqlConnection.QueryFirstOrDefaultAsync<Order?>("[dbo].[UpdateOrder]", new

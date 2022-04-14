@@ -26,8 +26,6 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
 
         public async Task<Transaction> Insert(Transaction transaction)
         {
-            ChaosMonkey.Do();
-
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 return await sqlConnection.QueryFirstAsync<Transaction>("[dbo].[InsertTransaction]", new
@@ -41,8 +39,6 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
 
         public async Task<Transaction> Update(Transaction transaction)
         {
-            ChaosMonkey.Do();
-
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 var result = await sqlConnection.QueryFirstOrDefaultAsync<Transaction?>("[dbo].[UpdateTransaction]", new
