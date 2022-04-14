@@ -27,7 +27,7 @@ namespace SimpleProject.Infrastructure.Gateways
 
                     var jsonPayload = await httpResponseMessage.Content.ReadAsStringAsync();
 
-                    var payload = System.Text.Json.JsonSerializer.Deserialize<dynamic?>(jsonPayload);
+                    var payload = System.Text.Json.JsonSerializer.Deserialize<object?>(jsonPayload);
 
                     var dynamicRouteResponse = new DynamicRouteResponse
                     {

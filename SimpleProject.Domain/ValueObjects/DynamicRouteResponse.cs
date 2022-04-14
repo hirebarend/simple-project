@@ -2,7 +2,7 @@
 {
     public class DynamicRouteResponse
     {
-        public dynamic? Payload { get; set; }
+        public object? Payload { get; set; }
 
         public bool Success { get; set; }
     }
