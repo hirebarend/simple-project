@@ -28,7 +28,7 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
         {
             await _mongoCollection.InsertOneAsync(new
             {
-                Payload = BsonDocument.Create(dynamicRouteRequest.Payload),
+                // Payload = BsonDocument.Create(dynamicRouteRequest.Payload),
                 Reference = reference,
             });
         }
