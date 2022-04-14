@@ -9,7 +9,7 @@ namespace SimpleProject.Infrastructure.Repositories
     {
         protected long _balance = 0;
 
-        protected object _lock = new object();
+        protected readonly object _lock = new object();
 
         protected readonly IList<Transaction> _transactions = new List<Transaction>();
 

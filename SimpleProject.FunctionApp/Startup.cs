@@ -20,7 +20,9 @@ namespace SimpleProject.FunctionApp
         {
             var configuration = builder.GetContext().Configuration;
 
-            var mongoClient = new MongoClient(configuration["MONGO_DB_CONNECTION_STRING"]);
+            var mongoClientSettings = MongoClientSettings.FromConnectionString(configuration["MONGO_DB_CONNECTION_STRING"]);
+
+            var mongoClient = new MongoClient(mongoClientSettings);
 
             var mongoDatabase = mongoClient.GetDatabase("simple-project");
 

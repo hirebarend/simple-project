@@ -2,23 +2,39 @@ const axios = require("axios").default;
 const uuid = require("uuid");
 
 (async () => {
-  const timestamp1 = new Date().getTime();
+  let concurrency = 1;
 
-    for (let i = 0; i < 100; i++) {
-      await execute();
+  let longAverage = 500;
+
+  let shortAverage = longAverage;
+
+  while (true) {
+    console.log(`concurrency: ${concurrency}`);
+
+    const promises = [];
+
+    for (let i = 0; i < concurrency; i++) {
+      promises.push(execute());
     }
 
-  // const array = [];
+    const result = await Promise.all(promises);
 
-  // for (let i = 0; i < 10; i++) {
-  //   array.push(execute());
-  // }
+    shortAverage = result.reduce((a, b) => a + b) / result.length;
 
-  // await Promise.all(array);
+    const ratio = shortAverage / longAverage;
 
-  const timestamp2 = new Date().getTime();
+    console.log(`shortAverage: ${shortAverage}`);
 
-  console.log(`${(timestamp2 - timestamp1) / 1000} seconds`);
+    console.log(`ratio: ${ratio}`);
+
+    if (ratio < 1) {
+      concurrency += 1;
+    } else if (ratio > 1) {
+      concurrency -= 1;
+    }
+
+    longAverage = shortAverage;
+  }
 })();
 
 async function execute() {
@@ -28,8 +44,6 @@ async function execute() {
     const responsePost = await axios.post(
       `https://function-app-5695.azurewebsites.net/api/Order/${reference}`
     );
-
-    console.log(responsePost.data)
 
     while (true) {
       const responseGet = await axios.get(
@@ -42,14 +56,10 @@ async function execute() {
         responseGet.data.state === 5 ||
         responseGet.data.state === 6
       ) {
-        console.log(
-          `${
-            new Date(responseGet.data.updated).getTime() -
-            new Date(responseGet.data.created).getTime()
-          }`
+        return (
+          new Date(responseGet.data.updated).getTime() -
+          new Date(responseGet.data.created).getTime()
         );
-
-        break;
       }
 
       await new Promise((resolve) => setTimeout(() => resolve(), 100));

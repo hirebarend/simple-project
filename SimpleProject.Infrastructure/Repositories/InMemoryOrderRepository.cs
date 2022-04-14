@@ -7,7 +7,7 @@ namespace SimpleProject.Infrastructure.Repositories
 {
     public class InMemoryOrderRepository : IOrderRepository
     {
-        protected object _lock = new object();
+        protected readonly object _lock = new object();
 
         public readonly IList<Order> _orders = new List<Order>();
 

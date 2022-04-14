@@ -5,6 +5,8 @@ namespace SimpleProject.Application.Gateways
 {
     public class ProductGateway
     {
+        protected readonly CircuitBreaker _circuitBreaker = new CircuitBreaker();
+
         protected readonly IProductGatewayLogRepository _productGatewayLogRepository;
 
         public ProductGateway(IProductGatewayLogRepository productGatewayLogRepository)
