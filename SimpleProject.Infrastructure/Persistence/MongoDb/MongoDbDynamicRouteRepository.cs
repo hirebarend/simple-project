@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using SimpleProject.Application.Interfaces;
 using SimpleProject.Domain.ValueObjects;
 
@@ -17,7 +18,7 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
         {
             await _mongoCollection.InsertOneAsync(new
             {
-                json = System.Text.Json.JsonSerializer.Serialize(dynamicRouteResponse),
+                Payload = BsonDocument.Create(dynamicRouteResponse.Payload),
             });
         }
 
@@ -25,7 +26,7 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
         {
             await _mongoCollection.InsertOneAsync(new
             {
-                json = System.Text.Json.JsonSerializer.Serialize(dynamicRouteRequest),
+                Payload = BsonDocument.Create(dynamicRouteRequest.Payload),
             });
         }
     }
