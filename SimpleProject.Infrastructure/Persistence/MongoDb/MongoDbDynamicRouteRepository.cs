@@ -1,35 +1,35 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using SimpleProject.Application.Interfaces;
 using SimpleProject.Domain.ValueObjects;
+using SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects;
 
 namespace SimpleProject.Infrastructure.Persistence.MongoDb
 {
     public class MongoDbDynamicRouteRepository : IDynamicRouteRepository
     {
-        protected readonly IMongoCollection<object> _mongoCollection;
+        protected readonly IMongoCollection<DynamicRoute> _mongoCollection;
 
-        public MongoDbDynamicRouteRepository(IMongoCollection<object> mongoCollection)
+        public MongoDbDynamicRouteRepository(IMongoCollection<DynamicRoute> mongoCollection)
         {
             _mongoCollection = mongoCollection ?? throw new ArgumentNullException(nameof(mongoCollection));
         }
 
         public async Task Insert(string reference, DynamicRouteResponse dynamicRouteResponse)
         {
-            await _mongoCollection.InsertOneAsync(new
+            await _mongoCollection.InsertOneAsync(new DynamicRoute
             {
-                Payload = BsonDocument.Create(dynamicRouteResponse.Payload),
-                Reference = reference,
-                Success = dynamicRouteResponse.Success,
+                Payload = dynamicRouteResponse.Payload,
+                //Reference = reference,
+                //Success = dynamicRouteResponse.Success,
             });
         }
 
         public async Task Insert(string reference, DynamicRouteRequest dynamicRouteRequest)
         {
-            await _mongoCollection.InsertOneAsync(new
+            await _mongoCollection.InsertOneAsync(new DynamicRoute
             {
-                // Payload = BsonDocument.Create(dynamicRouteRequest.Payload),
-                Reference = reference,
+                Payload = dynamicRouteRequest.Payload,
+                //Reference = reference,
             });
         }
     }
