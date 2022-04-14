@@ -24,7 +24,7 @@ namespace SimpleProject.FunctionApp
 
             var mongoDatabase = mongoClient.GetDatabase("simple-project");
 
-            var mongoCollectionDynamicRoutes = mongoDatabase.GetCollection<Infrastructure.Persistence.MongoDb.DataTransferObjects.DynamicRoute>("objects");
+            var mongoCollectionDynamicRoutes = mongoDatabase.GetCollection<Infrastructure.Persistence.MongoDb.DataTransferObjects.DynamicRoute>("dynamic-routes");
 
             var mongoCollectionOrder = mongoDatabase.GetCollection<Infrastructure.Persistence.MongoDb.DataTransferObjects.Order>("orders");
             
