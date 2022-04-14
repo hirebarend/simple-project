@@ -17,7 +17,7 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
 
         public async Task Insert(string reference, DynamicRouteResponse dynamicRouteResponse)
         {
-            var json = dynamicRouteRequest.Payload == null ? null : System.Text.Json.JsonSerializer.Serialize(dynamicRouteRequest.Payload);
+            var json = dynamicRouteResponse.Payload == null ? null : System.Text.Json.JsonSerializer.Serialize(dynamicRouteResponse.Payload);
 
             await _mongoCollection.InsertOneAsync(new DynamicRoute
             {
