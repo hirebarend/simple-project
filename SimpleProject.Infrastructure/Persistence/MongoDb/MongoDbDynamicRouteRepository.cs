@@ -6,9 +6,9 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
 {
     public class MongoDbDynamicRouteRepository : IDynamicRouteRepository
     {
-        protected readonly IMongoCollection<dynamic> _mongoCollection;
+        protected readonly IMongoCollection<object> _mongoCollection;
 
-        public MongoDbDynamicRouteRepository(IMongoCollection<dynamic> mongoCollection)
+        public MongoDbDynamicRouteRepository(IMongoCollection<object> mongoCollection)
         {
             _mongoCollection = mongoCollection ?? throw new ArgumentNullException(nameof(mongoCollection));
         }

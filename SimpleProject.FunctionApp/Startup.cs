@@ -24,7 +24,7 @@ namespace SimpleProject.FunctionApp
 
             var mongoDatabase = mongoClient.GetDatabase("simple-project");
 
-            var mongoCollectionDynamic = mongoDatabase.GetCollection<dynamic>("dynamic");
+            var mongoCollectionObjects = mongoDatabase.GetCollection<object>("objects");
 
             var mongoCollectionOrder = mongoDatabase.GetCollection<Infrastructure.Persistence.MongoDb.DataTransferObjects.Order>("orders");
 
@@ -36,7 +36,7 @@ namespace SimpleProject.FunctionApp
 
             builder.Services.AddSingleton<IServiceBus, AzureServiceBus>();
 
-            builder.Services.AddSingleton<IDynamicRouteRepository>(new MongoDbDynamicRouteRepository(mongoCollectionDynamic));
+            builder.Services.AddSingleton<IDynamicRouteRepository>(new MongoDbDynamicRouteRepository(mongoCollectionObjects));
 
             builder.Services.AddSingleton<IOrderRepository>(x => new MongoDbOrderRepository(mongoCollectionOrder));
 
