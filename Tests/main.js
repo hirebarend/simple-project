@@ -2,38 +2,22 @@ const axios = require("axios").default;
 const uuid = require("uuid");
 
 (async () => {
-  let concurrency = 1;
+  const durationInSeconds = 2;
 
-  let longAverage = 500;
+  const requestsPerSecond = 5;
 
-  let shortAverage = longAverage;
+  const numberOfRequests = durationInSeconds * requestsPerSecond;
 
-  while (true) {
-    console.log(`concurrency: ${concurrency}`);
+  console.log(`numberOfRequests: ${numberOfRequests}`);
 
-    const promises = [];
+  const interval = requestsPerSecond / 1000;
 
-    for (let i = 0; i < concurrency; i++) {
-      promises.push(execute());
-    }
+  console.log(`interval: ${interval}`);
 
-    const result = await Promise.all(promises);
+  for (let i = 0; i < numberOfRequests; i++) {
+    execute();
 
-    shortAverage = result.reduce((a, b) => a + b) / result.length;
-
-    const ratio = shortAverage / longAverage;
-
-    console.log(`shortAverage: ${shortAverage}`);
-
-    console.log(`ratio: ${ratio}`);
-
-    if (ratio < 1) {
-      concurrency += 1;
-    } else if (ratio > 1) {
-      concurrency -= 1;
-    }
-
-    longAverage = shortAverage;
+    await new Promise((resolve) => setTimeout(() => resolve(), interval));
   }
 })();
 
@@ -51,10 +35,8 @@ async function execute() {
       );
 
       if (
-        (responseGet.data && responseGet.data.state === 3) ||
-        responseGet.data.state === 4 ||
-        responseGet.data.state === 5 ||
-        responseGet.data.state === 6
+        responseGet.data &&
+        (responseGet.data.state === 3 || responseGet.data.state === 4)
       ) {
         return (
           new Date(responseGet.data.updated).getTime() -

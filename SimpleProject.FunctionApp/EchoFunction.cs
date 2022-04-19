@@ -14,7 +14,10 @@ namespace SimpleProject.FunctionApp
             [HttpTrigger(AuthorizationLevel.Anonymous, "GET", "POST", Route = null)] HttpRequest httpRequest,
             ILogger logger)
         {
-            return new OkObjectResult(true);
+            return new OkObjectResult(new
+            {
+                success = true,
+            });
         }
     }
 }
