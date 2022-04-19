@@ -19,11 +19,11 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
-                await sqlConnection.QueryFirstAsync<Order>("[dbo].[InsertDynamicRouteResponse]", new
+                await sqlConnection.QueryFirstAsync<Order>("[dbo].[InsertDynamicRoute]", new
                 {
-                    data = string.Empty,
+                    data = System.Text.Json.JsonSerializer.Serialize(dynamicRouteResponse.Payload),
                     reference = reference,
-                    message = string.Empty,
+                    message = "DynamicRouteResponse",
                 }, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
@@ -32,9 +32,11 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
-                await sqlConnection.QueryFirstAsync<Order>("[dbo].[InsertDynamicRouteRequest]", new
+                await sqlConnection.QueryFirstAsync<Order>("[dbo].[InsertDynamicRoute]", new
                 {
+                    data = System.Text.Json.JsonSerializer.Serialize(dynamicRouteRequest.Payload),
                     reference = reference,
+                    message = "DynamicRouteRequest",
                 }, commandType: System.Data.CommandType.StoredProcedure);
             }
         }

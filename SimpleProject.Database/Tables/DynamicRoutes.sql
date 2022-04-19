@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Logs]
+﻿CREATE TABLE [dbo].[DynamicRoutes]
 (
     [Id] BIGINT IDENTITY (1, 1) NOT NULL,
     [Created] DATETIMEOFFSET(7) NOT NULL,

@@ -2,7 +2,6 @@
 using SimpleProject.Application.Interfaces;
 using SimpleProject.Domain.Entities;
 using SimpleProject.Domain.Exceptions;
-using SimpleProject.Shared.Misc;
 using System.Data.SqlClient;
 
 namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
@@ -14,6 +13,38 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
         public MsSqlServerTransactionRepository(string connectionString)
         {
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+        }
+
+        public async Task<Transaction> Authorize(Transaction transaction)
+        {
+            try
+            {
+                using (var sqlConnection = new SqlConnection(_connectionString))
+                {
+                    var result = await sqlConnection.QueryFirstOrDefaultAsync<Transaction?>("[dbo].[AuthorizeTransaction]", new
+                    {
+                        amount = transaction.Amount,
+                        reference = transaction.Reference,
+                        version = transaction.Version,
+                    }, commandType: System.Data.CommandType.StoredProcedure);
+
+                    if (result == null)
+                    {
+                        throw new BusinessException($"unable to find transaction with reference, '{transaction.Reference}'");
+                    }
+
+                    return result;
+                }
+            }
+            catch (SqlException sqlException)
+            {
+                if (sqlException.Message.Equals("insufficient_balance"))
+                {
+                    throw new InsufficientBalanceException();
+                }
+
+                throw;
+            }
         }
 
         public async Task DeleteAll()
@@ -50,7 +81,27 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
 
                 if (result == null)
                 {
-                    throw new BusinessException($"unable to find order with reference, '{transaction.Reference}'");
+                    throw new BusinessException($"unable to find transaction with reference, '{transaction.Reference}'");
+                }
+
+                return result;
+            }
+        }
+
+        public async Task<Transaction> Void(Transaction transaction)
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                var result = await sqlConnection.QueryFirstOrDefaultAsync<Transaction?>("[dbo].[VoidTransaction]", new
+                {
+                    amount = transaction.Amount,
+                    reference = transaction.Reference,
+                    version = transaction.Version,
+                }, commandType: System.Data.CommandType.StoredProcedure);
+
+                if (result == null)
+                {
+                    throw new BusinessException($"unable to find transaction with reference, '{transaction.Reference}'");
                 }
 
                 return result;

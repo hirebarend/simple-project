@@ -54,7 +54,7 @@ namespace SimpleProject.FunctionApp
                         Url = "http://data.fixer.io/api/latest?access_key=eadd3f04a3179173fe19955aeac8fb01"
                     },
                     Order = Order.Create(reference),
-                    Transaction = Transaction.Create(10, reference),
+                    Transaction = Transaction.Create(-50, reference),
                     Type = OrderEventType.Create,
                 };
 

@@ -29,44 +29,110 @@ namespace SimpleProject.Domain.Entities
             };
         }
 
-        public Transaction Authorize()
+        public bool Authorize()
         {
-            if (State == TransactionState.Pending)
+            if (!CanAuthorize())
             {
-                State = TransactionState.Authorized;
+                return false;
             }
 
-            return this;
+            State = TransactionState.Authorized;
+
+            Updated = DateTimeOffset.UtcNow;
+
+            return true;
         }
 
-        public Transaction Cancel()
+        public bool CanAuthorize()
         {
-            if (State == TransactionState.Pending)
-            {
-                State = TransactionState.Cancelled;
-            }
-
-            return this;
+            return IsPending();
         }
 
-        public Transaction Settle()
+        public bool CanCancel()
         {
-            if (State == TransactionState.Authorized)
-            {
-                State = TransactionState.Settled;
-            }
-
-            return this;
+            return IsPending();
         }
 
-        public Transaction Void()
+        public bool Cancel()
         {
-            if (State == TransactionState.Authorized || State == TransactionState.Settled)
+            if (!CanCancel())
             {
-                State = TransactionState.Voided;
+                return false;
             }
 
-            return this;
+            State = TransactionState.Cancelled;
+
+            Updated = DateTimeOffset.UtcNow;
+
+            return true;
+        }
+
+        public bool CanSettle()
+        {
+            return IsAuthorized();
+        }
+
+        public bool CanVoid()
+        {
+            return IsAuthorized();
+        }
+
+        public bool IsAuthorized()
+        {
+            return State == TransactionState.Authorized;
+        }
+
+        public bool IsCancelled()
+        {
+            return State == TransactionState.Cancelled;
+        }
+
+        public bool IsInitial()
+        {
+            return State == TransactionState.Initial;
+        }
+
+        public bool IsPending()
+        {
+            return State == TransactionState.Pending;
+        }
+
+        public bool IsSettled()
+        {
+            return State == TransactionState.Settled;
+        }
+
+        public bool IsVoided()
+        {
+            return State == TransactionState.Voided;
+        }
+
+        public bool Settle()
+        {
+            if (!CanSettle())
+            {
+                return false;
+            }
+
+            State = TransactionState.Settled;
+
+            Updated = DateTimeOffset.UtcNow;
+
+            return true;
+        }
+
+        public bool Void()
+        {
+            if (!CanVoid())
+            {
+                return false;
+            }
+
+            State = TransactionState.Voided;
+
+            Updated = DateTimeOffset.UtcNow;
+
+            return true;
         }
     }
 }

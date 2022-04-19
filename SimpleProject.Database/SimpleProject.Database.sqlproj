@@ -9,8 +9,7 @@
     <ProjectGuid>{8a7634fb-469d-4612-a6b7-aafc4cb84341}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
-    <RootPath>
-    </RootPath>
+    <RootPath />
     <RootNamespace>SimpleProject.Database</RootNamespace>
     <AssemblyName>SimpleProject.Database</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
@@ -48,7 +47,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
-    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
@@ -59,18 +57,25 @@
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
     <Folder Include="Constraints" />
+    <Folder Include="Data" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Orders.sql" />
     <Build Include="StoredProcedures\InsertOrder.sql" />
     <Build Include="StoredProcedures\UpdateOrder.sql" />
-    <Build Include="Tables\Logs.sql" />
-    <Build Include="StoredProcedures\InsertLog.sql" />
-    <Build Include="Constraints\Logs.sql" />
+    <Build Include="Tables\DynamicRoutes.sql" />
+    <Build Include="StoredProcedures\InsertDynamicRoute.sql" />
+    <Build Include="Constraints\DynamicRoutes.sql" />
     <Build Include="Constraints\Orders.sql" />
     <Build Include="Tables\Transactions.sql" />
     <Build Include="Constraints\Transactions.sql" />
     <Build Include="StoredProcedures\UpdateTransaction.sql" />
     <Build Include="StoredProcedures\InsertTransaction.sql" />
+    <Build Include="Tables\Accounts.sql" />
+    <Build Include="StoredProcedures\AuthorizeTransaction.sql" />
+    <Build Include="StoredProcedures\VoidTransaction.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Data\Accounts.sql" />
   </ItemGroup>
 </Project>

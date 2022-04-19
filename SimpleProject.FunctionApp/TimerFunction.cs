@@ -20,7 +20,7 @@ namespace SimpleProject.FunctionApp
         }
 
         [FunctionName("TimerFunction")]
-        public async Task Run([TimerTrigger("0 */15 * * * *")]TimerInfo timerInfo, ILogger logger)
+        public async Task Run([TimerTrigger("0 0 */1 * * *")]TimerInfo timerInfo, ILogger logger)
         {
             var reference = Guid.NewGuid().ToString();
 
@@ -37,7 +37,7 @@ namespace SimpleProject.FunctionApp
                     Url = "http://data.fixer.io/api/latest?access_key=eadd3f04a3179173fe19955aeac8fb01"
                 },
                 Order = Order.Create(reference),
-                Transaction = Transaction.Create(10, reference),
+                Transaction = Transaction.Create(-50, reference),
                 Type = OrderEventType.Create,
             };
 

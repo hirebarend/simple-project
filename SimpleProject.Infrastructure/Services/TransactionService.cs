@@ -2,6 +2,7 @@
 using SimpleProject.Domain.Entities;
 using SimpleProject.Domain.Enums;
 using SimpleProject.Domain.Events;
+using SimpleProject.Domain.Exceptions;
 using SimpleProject.Domain.ValueObjects;
 
 namespace SimpleProject.Infrastructure.Services
@@ -21,18 +22,33 @@ namespace SimpleProject.Infrastructure.Services
 
         public async Task Authorize(Account account, DynamicRouteRequest dynamicRouteRequest, Order order, Transaction transaction)
         {
-            if (transaction.State != TransactionState.Pending)
+            if (!transaction.Authorize())
             {
                 // TODO
 
                 return;
             }
 
-            transaction.State = TransactionState.Authorized;
+            try
+            {
+                transaction = await _transactionRepository.Authorize(transaction);
+            }catch (InsufficientBalanceException insufficientBalanceException)
+            {
+                transaction.State = TransactionState.Pending;
 
-            transaction = await _transactionRepository.Update(transaction);
+                await _serviceBus.Publish(new OrderEvent
+                {
+                    Account = account,
+                    DynamicRouteRequest = dynamicRouteRequest,
+                    Order = order,
+                    Transaction = transaction,
+                    Type = OrderEventType.Cancel,
+                });
 
-            if (transaction.State != TransactionState.Authorized)
+                return;
+            }
+
+            if (!transaction.IsAuthorized())
             {
                 // TODO
 
@@ -51,18 +67,16 @@ namespace SimpleProject.Infrastructure.Services
 
         public async Task Cancel(Account account, DynamicRouteRequest dynamicRouteRequest, Order order, Transaction transaction)
         {
-            if (transaction.State != TransactionState.Pending)
+            if (!transaction.Cancel())
             {
                 // TODO
 
                 return;
             }
 
-            transaction.State = TransactionState.Cancelled;
-
             transaction = await _transactionRepository.Update(transaction);
 
-            if (transaction.State != TransactionState.Cancelled)
+            if (!transaction.IsCancelled())
             {
                 // TODO
 
@@ -81,7 +95,7 @@ namespace SimpleProject.Infrastructure.Services
 
         public async Task Create(Account account, DynamicRouteRequest dynamicRouteRequest, Order order, Transaction transaction)
         {
-            if (transaction.State != TransactionState.Initial)
+            if (!transaction.IsInitial())
             {
                 // TODO
 
@@ -92,7 +106,7 @@ namespace SimpleProject.Infrastructure.Services
 
             transaction = await _transactionRepository.Insert(transaction);
 
-            if (transaction.State != TransactionState.Pending)
+            if (!transaction.IsPending())
             {
                 // TODO
 
@@ -111,18 +125,16 @@ namespace SimpleProject.Infrastructure.Services
 
         public async Task Settle(Account account, DynamicRouteRequest dynamicRouteRequest, Order order, Transaction transaction)
         {
-            if (transaction.State != TransactionState.Authorized)
+            if (!transaction.Settle())
             {
                 // TODO
 
                 return;
             }
 
-            transaction.State = TransactionState.Settled;
-
             transaction = await _transactionRepository.Update(transaction);
 
-            if (transaction.State != TransactionState.Settled)
+            if (!transaction.IsSettled())
             {
                 // TODO
 
@@ -141,18 +153,16 @@ namespace SimpleProject.Infrastructure.Services
 
         public async Task Void(Account account, DynamicRouteRequest dynamicRouteRequest, Order order, Transaction transaction)
         {
-            if (transaction.State != TransactionState.Authorized)
+            if (!transaction.Void())
             {
                 // TODO
 
                 return;
             }
 
-            transaction.State = TransactionState.Voided;
+            transaction = await _transactionRepository.Void(transaction);
 
-            transaction = await _transactionRepository.Update(transaction);
-
-            if (transaction.State != TransactionState.Voided)
+            if (!transaction.IsVoided())
             {
                 // TODO
 
