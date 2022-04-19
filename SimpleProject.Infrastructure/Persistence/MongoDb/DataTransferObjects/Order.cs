@@ -8,6 +8,8 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects
     {
         public string Created { get; set; }
 
+        public double Duration { get; set; }
+
         [BsonId]
         public ObjectId Id { get; set; }
 
@@ -24,6 +26,7 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects
             return new Order
             {
                 Created = order.Created.ToString("o"),
+                Duration = order.Updated.Subtract(order.Created).TotalMilliseconds,
                 Id = ObjectId.GenerateNewId(),
                 Reference = order.Reference,
                 State = order.State.ToString(),

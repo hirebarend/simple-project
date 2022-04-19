@@ -51,10 +51,10 @@ namespace SimpleProject.FunctionApp
                     {
                         Method = "GET",
                         Payload = null,
-                        Url = "http://data.fixer.io/api/latest?access_key=eadd3f04a3179173fe19955aeac8fb01"
+                        Url = "https://postman-echo.com/get"
                     },
                     Order = Order.Create(reference),
-                    Transaction = Transaction.Create(-50, reference),
+                    Transaction = Transaction.Create(-15, reference),
                     Type = OrderEventType.Create,
                 };
 

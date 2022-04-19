@@ -8,6 +8,8 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects
     {
         public int Amount { get; set; }
 
+        public double Duration { get; set; }
+
         public string Created { get; set; }
 
         [BsonId]
@@ -27,6 +29,7 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects
             {
                 Amount = transaction.Amount,
                 Created = transaction.Created.ToString("o"),
+                Duration = transaction.Updated.Subtract(transaction.Created).TotalMilliseconds,
                 Id = ObjectId.GenerateNewId(),
                 Reference = transaction.Reference,
                 State = transaction.State.ToString(),

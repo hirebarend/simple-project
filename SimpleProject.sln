@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleProject.FunctionApp",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleProject.Tests", "SimpleProject.Tests\SimpleProject.Tests.csproj", "{495F6539-12C7-4932-A0AA-58A5F2E6AAC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleProject.Console", "SimpleProject.Console\SimpleProject.Console.csproj", "{1B060FFD-6B33-4BD9-94BD-4AD603707199}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleProject.Console", "SimpleProject.Console\SimpleProject.Console.csproj", "{1B060FFD-6B33-4BD9-94BD-4AD603707199}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
