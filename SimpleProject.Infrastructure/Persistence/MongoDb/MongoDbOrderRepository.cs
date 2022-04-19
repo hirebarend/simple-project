@@ -52,7 +52,7 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
         {
             var orderDataTransferObject = DataTransferObjects.Order.FromDomain(order);
 
-            var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == orderDataTransferObject.Reference && x.Version == orderDataTransferObject.Version, Builders<DataTransferObjects.Order>.Update.Set(x => x.State, orderDataTransferObject.State).Inc(x => x.Version, 1).Set(x => x.Updated, orderDataTransferObject.Updated));
+            var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == orderDataTransferObject.Reference && x.Version == orderDataTransferObject.Version, Builders<DataTransferObjects.Order>.Update.Set(x => x.Duration, orderDataTransferObject.Duration).Set(x => x.State, orderDataTransferObject.State).Inc(x => x.Version, 1).Set(x => x.Updated, orderDataTransferObject.Updated));
 
             if (updateResult.MatchedCount == 0)
             {
