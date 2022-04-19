@@ -87,7 +87,7 @@
             },
             {
               "name": "AZURE_SERVICE_BUS_CONNECTION_STRING",
-              "value": ""
+              "value": "Endpoint=sb://service-bus-4082.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=0Bvu8BXWI2PshznKGUQVDh2svG5QMCZPjuH1XKfNmwU="
             },
             {
               "name": "MONGO_DB",

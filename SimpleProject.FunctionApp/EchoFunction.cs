@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace SimpleProject.FunctionApp
@@ -14,6 +15,8 @@ namespace SimpleProject.FunctionApp
             [HttpTrigger(AuthorizationLevel.Anonymous, "GET", "POST", Route = null)] HttpRequest httpRequest,
             ILogger logger)
         {
+            logger.LogInformation(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
+
             return new OkObjectResult(new
             {
                 success = true,
