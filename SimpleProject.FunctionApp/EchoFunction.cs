@@ -9,7 +9,7 @@ namespace SimpleProject.FunctionApp
 {
     public static class EchoFunction
     {
-        [FunctionName("EchoFunction")]
+        [FunctionName("Echo")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "GET", "POST", Route = null)] HttpRequest httpRequest,
             ILogger logger)

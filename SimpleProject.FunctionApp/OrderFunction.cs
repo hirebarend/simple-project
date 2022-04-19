@@ -51,10 +51,10 @@ namespace SimpleProject.FunctionApp
                     {
                         Method = "GET",
                         Payload = null,
-                        Url = "https://postman-echo.com/get"
+                        Url = "https://function-app-5695.azurewebsites.net/api/Echo"
                     },
                     Order = Order.Create(reference),
-                    Transaction = Transaction.Create(-15, reference),
+                    Transaction = Transaction.Create(-50, reference),
                     Type = OrderEventType.Create,
                 };
 
