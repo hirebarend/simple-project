@@ -51,7 +51,7 @@ namespace SimpleProject.FunctionApp
                     {
                         Method = "GET",
                         Payload = null,
-                        Url = $"{Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")}/api/Echo"
+                        Url = $"https://{Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")}.net/api/Echo"
                     },
                     Order = Order.Create(reference),
                     Transaction = Transaction.Create(-50, reference),

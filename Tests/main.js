@@ -30,12 +30,12 @@ async function execute() {
     const reference = uuid.v4();
 
     const responsePost = await axios.post(
-      `https://function-app-5695.azurewebsites.net/api/Order/${reference}`
+      `https://function-app-4414.azurewebsites.net/api/Order/${reference}`
     );
 
     while (true) {
       const responseGet = await axios.get(
-        `https://function-app-5695.azurewebsites.net/api/Order/${responsePost.data.order.reference}`
+        `https://function-app-4414.azurewebsites.net/api/Order/${responsePost.data.order.reference}`
       );
 
       if (
@@ -53,8 +53,8 @@ async function execute() {
 
       await new Promise((resolve) => setTimeout(() => resolve(), 100));
     }
-  } catch {
-    console.log(`[ERROR]`);
+  } catch(error) {
+    console.log(`[ERROR] - ${error.message}`);
 
     return 0;
   }

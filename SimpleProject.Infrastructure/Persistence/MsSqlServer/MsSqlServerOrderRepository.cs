@@ -23,9 +23,15 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             }
         }
 
-        public Task<Order?> Find(string reference)
+        public async Task<Order?> Find(string reference)
         {
-            throw new NotImplementedException();
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                return await sqlConnection.QueryFirstAsync<Order>("[dbo].[FindOrder]", new
+                {
+                    reference = reference,
+                }, commandType: System.Data.CommandType.StoredProcedure);
+            }
         }
 
         public async Task<Order> Insert(Order order)

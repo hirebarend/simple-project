@@ -103,7 +103,7 @@
             },
             {
               "name": "MS_SQL_SERVER_CONNECTION_STRING",
-              "value": ""
+              "value": "Server=tcp:sql-database-server-6919.database.windows.net,1433;Initial Catalog=simple-project;Persist Security Info=False;User ID=simple-project;Password=DMEvNpv96Ti3w5T;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
             }
           ],
           "cors": {

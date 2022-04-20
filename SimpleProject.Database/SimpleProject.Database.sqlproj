@@ -74,6 +74,7 @@
     <Build Include="Tables\Accounts.sql" />
     <Build Include="StoredProcedures\AuthorizeTransaction.sql" />
     <Build Include="StoredProcedures\VoidTransaction.sql" />
+    <Build Include="StoredProcedures\FindOrder.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Data\Accounts.sql" />
