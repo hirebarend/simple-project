@@ -47,14 +47,6 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             }
         }
 
-        public async Task DeleteAll()
-        {
-            using (var sqlConnection = new SqlConnection(_connectionString))
-            {
-                await sqlConnection.ExecuteAsync("DELETE FROM [dbo].[Transactions];");
-            }
-        }
-
         public async Task<Transaction> Insert(Transaction transaction)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))

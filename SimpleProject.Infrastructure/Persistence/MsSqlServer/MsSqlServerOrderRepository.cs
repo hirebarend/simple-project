@@ -15,19 +15,11 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
-        public async Task DeleteAll()
-        {
-            using (var sqlConnection = new SqlConnection(_connectionString))
-            {
-                await sqlConnection.ExecuteAsync("DELETE FROM [dbo].[Orders];");
-            }
-        }
-
         public async Task<Order?> Find(string reference)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
-                return await sqlConnection.QueryFirstAsync<Order>("[dbo].[FindOrder]", new
+                return await sqlConnection.QueryFirstOrDefaultAsync<Order>("[dbo].[FindOrder]", new
                 {
                     reference = reference,
                 }, commandType: System.Data.CommandType.StoredProcedure);

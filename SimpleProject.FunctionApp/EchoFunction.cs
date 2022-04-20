@@ -19,7 +19,7 @@ namespace SimpleProject.FunctionApp
 
             return new OkObjectResult(new
             {
-                success = true,
+                url = $"https://{Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME")}.net/api/Echo",
             });
         }
     }

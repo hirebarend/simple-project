@@ -2,7 +2,7 @@ const axios = require("axios").default;
 const uuid = require("uuid");
 
 (async () => {
-  const durationInSeconds = 30;
+  const durationInSeconds = 60;
 
   const requestsPerSecond = 5;
 

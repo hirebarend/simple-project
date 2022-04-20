@@ -1,6 +1,7 @@
 ﻿using SimpleProject.Application.Interfaces;
 using SimpleProject.Domain.ValueObjects;
 using SimpleProject.Shared.Misc;
+using System.Text.Json;
 
 namespace SimpleProject.Infrastructure.Gateways
 {
@@ -23,11 +24,11 @@ namespace SimpleProject.Infrastructure.Gateways
 
                 using (var httpClient = new HttpClient())
                 {
-                    var httpResponseMessage = await httpClient.GetAsync(dynamicRouteRequest.Url);
+                    var httpResponseMessage = dynamicRouteRequest.Method.Equals("GET") ? await httpClient.GetAsync(dynamicRouteRequest.Url) : await httpClient.PostAsync(dynamicRouteRequest.Url, new StringContent(JsonSerializer.Serialize(dynamicRouteRequest.Payload)));
 
                     var jsonPayload = await httpResponseMessage.Content.ReadAsStringAsync();
 
-                    var payload = System.Text.Json.JsonSerializer.Deserialize<object?>(jsonPayload);
+                    var payload = JsonSerializer.Deserialize<object?>(jsonPayload);
 
                     var dynamicRouteResponse = new DynamicRouteResponse
                     {
@@ -40,7 +41,7 @@ namespace SimpleProject.Infrastructure.Gateways
                     return dynamicRouteResponse;
                 }
             }
-            catch(Exception exception)
+            catch
             {
                 return new DynamicRouteResponse
                 {
