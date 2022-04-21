@@ -13,22 +13,22 @@ using System.Threading.Tasks;
 
 namespace SimpleProject.FunctionApp
 {
-    public class OrderFunction
+    public class OrdersFunction
     {
         protected readonly IOrderRepository _orderRepository;
 
         protected readonly IServiceBus _serviceBus;
 
-        public OrderFunction(IOrderRepository orderRepository, IServiceBus serviceBus)
+        public OrdersFunction(IOrderRepository orderRepository, IServiceBus serviceBus)
         {
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
 
             _serviceBus = serviceBus ?? throw new ArgumentNullException(nameof(serviceBus));
         }
 
-        [FunctionName("Order")]
+        [FunctionName("Orders")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "GET", "POST", Route = "Order/{reference}")] HttpRequest httpRequest,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "GET", "POST", Route = "Orders/{reference}")] HttpRequest httpRequest,
             string reference,
             ILogger logger)
         {

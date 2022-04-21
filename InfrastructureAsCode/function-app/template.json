@@ -87,19 +87,19 @@
             },
             {
               "name": "AZURE_SERVICE_BUS_CONNECTION_STRING",
-              "value": "Endpoint=sb://service-bus-4082.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=0Bvu8BXWI2PshznKGUQVDh2svG5QMCZPjuH1XKfNmwU="
+              "value": "Endpoint=sb://service-bus-4082.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=wfyDqOMPGK2aEljIEKbvYYM5apKk5//5yVu+thbdOZ8="
             },
             {
               "name": "MONGO_DB",
-              "value": "false"
+              "value": "true"
             },
             {
               "name": "MONGO_DB_CONNECTION_STRING",
-              "value": ""
+              "value": "mongodb+srv://default:<password>@startup-55-eoqhx.azure.mongodb.net/default?retryWrites=true&w=majority"
             },
             {
               "name": "MS_SQL_SERVER",
-              "value": "true"
+              "value": "false"
             },
             {
               "name": "MS_SQL_SERVER_CONNECTION_STRING",

@@ -30,12 +30,12 @@ async function execute() {
     const reference = uuid.v4();
 
     const responsePost = await axios.post(
-      `https://function-app-4414.azurewebsites.net/api/Order/${reference}`
+      `https://function-app-4414.azurewebsites.net/api/orders/${reference}`
     );
 
     while (true) {
       const responseGet = await axios.get(
-        `https://function-app-4414.azurewebsites.net/api/Order/${responsePost.data.order.reference}`
+        `https://function-app-4414.azurewebsites.net/api/orders/${responsePost.data.order.reference}`
       );
 
       if (

@@ -32,6 +32,20 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
             return result.ToDomain();
         }
 
+        public async Task<Transaction?> Find(Account account, string reference)
+        {
+            var asyncCursor = await _mongoCollection.FindAsync(x => x.Reference == reference);
+
+            var result = await asyncCursor.FirstOrDefaultAsync();
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            return result.ToDomain();
+        }
+
         public async Task<Transaction> Insert(Account account, Transaction transaction)
         {
             var transactionDataTransferObject = DataTransferObjects.Transaction.FromDomain(account, transaction);

@@ -48,6 +48,17 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             }
         }
 
+        public async Task<Transaction?> Find(Account account, string reference)
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                return await sqlConnection.QueryFirstOrDefaultAsync<Transaction>("[dbo].[FindTransaction]", new
+                {
+                    reference = reference,
+                }, commandType: System.Data.CommandType.StoredProcedure);
+            }
+        }
+
         public async Task<Transaction> Insert(Account account, Transaction transaction)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))

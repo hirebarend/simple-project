@@ -6,6 +6,8 @@ namespace SimpleProject.Application.Interfaces
     {
         Task<Transaction> Authorize(Account account, Transaction transaction);
 
+        Task<Transaction?> Find(Account account, string reference);
+
         Task<Transaction> Insert(Account account, Transaction transaction);
 
         Task<Transaction> Update(Account account, Transaction transaction);

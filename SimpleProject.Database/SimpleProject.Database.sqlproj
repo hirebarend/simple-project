@@ -77,5 +77,6 @@
     <Build Include="Indexes\Transactions.sql" />
     <Build Include="Indexes\Orders.sql" />
     <Build Include="Indexes\DynamicRoutes.sql" />
+    <Build Include="StoredProcedures\FindTransaction.sql" />
   </ItemGroup>
 </Project>
