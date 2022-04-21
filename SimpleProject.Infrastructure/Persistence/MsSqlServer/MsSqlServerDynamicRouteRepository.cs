@@ -15,7 +15,7 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
-        public async Task Insert(string reference, DynamicRouteResponse dynamicRouteResponse)
+        public async Task Insert(Account account, string reference, DynamicRouteResponse dynamicRouteResponse)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
@@ -28,7 +28,7 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             }
         }
 
-        public async Task Insert(string reference, DynamicRouteRequest dynamicRouteRequest)
+        public async Task Insert(Account account, string reference, DynamicRouteRequest dynamicRouteRequest)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {

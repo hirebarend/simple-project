@@ -1,8 +1,11 @@
 ﻿CREATE TABLE [dbo].[Transactions]
 (
     [Id] BIGINT IDENTITY (1, 1) NOT NULL,
+    [AccountReference] VARCHAR(36) NOT NULL,
     [Amount] INT NOT NULL,
     [Created] DATETIMEOFFSET(7) NOT NULL,
+    [Metadata] NVARCHAR(MAX) NOT NULL,
+    [ProductId] VARCHAR(36) NOT NULL,
     [Reference] VARCHAR(36) NOT NULL,
     [State] TINYINT NOT NULL,
     [Updated] DATETIMEOFFSET(7) NOT NULL,

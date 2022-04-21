@@ -3,6 +3,7 @@ using SimpleProject.Application.Interfaces;
 using SimpleProject.Domain.Entities;
 using SimpleProject.Domain.Exceptions;
 using System.Data.SqlClient;
+using System.Text.Json;
 
 namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
 {
@@ -15,7 +16,7 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
-        public async Task<Transaction> Authorize(Transaction transaction)
+        public async Task<Transaction> Authorize(Account account, Transaction transaction)
         {
             try
             {
@@ -47,20 +48,23 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             }
         }
 
-        public async Task<Transaction> Insert(Transaction transaction)
+        public async Task<Transaction> Insert(Account account, Transaction transaction)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 return await sqlConnection.QueryFirstAsync<Transaction>("[dbo].[InsertTransaction]", new
                 {
+                    accountReference = account.Reference,
                     amount = transaction.Amount,
+                    metadata = JsonSerializer.Serialize(transaction.Metadata),
+                    productId = transaction.ProductId,
                     reference = transaction.Reference,
-                    state = transaction.State,
+                    version = transaction.Version,
                 }, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
 
-        public async Task<Transaction> Update(Transaction transaction)
+        public async Task<Transaction> Update(Account account, Transaction transaction)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
@@ -80,7 +84,7 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             }
         }
 
-        public async Task<Transaction> Void(Transaction transaction)
+        public async Task<Transaction> Void(Account account, Transaction transaction)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {

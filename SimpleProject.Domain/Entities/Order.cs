@@ -6,6 +6,10 @@ namespace SimpleProject.Domain.Entities
     {
         public DateTimeOffset Created { get; set; }
 
+        public IDictionary<string, string> Metadata { get; set; }
+
+        public string ProductId { get; set; }
+
         public string Reference { get; set; }
 
         public OrderState State { get; set; }
@@ -19,6 +23,11 @@ namespace SimpleProject.Domain.Entities
             return new Order
             {
                 Created = DateTimeOffset.UtcNow,
+                Metadata = new Dictionary<string, string>
+                {
+                    { "reference", reference},
+                },
+                ProductId = "6317",
                 Reference = reference,
                 State = OrderState.Pending,
                 Version = 0,

@@ -4,12 +4,12 @@ namespace SimpleProject.Application.Interfaces
 {
     public interface ITransactionRepository
     {
-        Task<Transaction> Authorize(Transaction transaction);
+        Task<Transaction> Authorize(Account account, Transaction transaction);
 
-        Task<Transaction> Insert(Transaction transaction);
+        Task<Transaction> Insert(Account account, Transaction transaction);
 
-        Task<Transaction> Update(Transaction transaction);
+        Task<Transaction> Update(Account account, Transaction transaction);
 
-        Task<Transaction> Void(Transaction transaction);
+        Task<Transaction> Void(Account account, Transaction transaction);
     }
 }

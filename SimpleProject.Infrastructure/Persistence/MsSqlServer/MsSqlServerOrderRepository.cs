@@ -3,6 +3,7 @@ using SimpleProject.Application.Interfaces;
 using SimpleProject.Domain.Entities;
 using SimpleProject.Domain.Exceptions;
 using System.Data.SqlClient;
+using System.Text.Json;
 
 namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
 {
@@ -15,7 +16,7 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
-        public async Task<Order?> Find(string reference)
+        public async Task<Order?> Find(Account account, string reference)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
@@ -26,19 +27,22 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             }
         }
 
-        public async Task<Order> Insert(Order order)
+        public async Task<Order> Insert(Account account, Order order)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 return await sqlConnection.QueryFirstAsync<Order>("[dbo].[InsertOrder]", new
                 {
+                    accountReference = account.Reference,
+                    metadata = JsonSerializer.Serialize(order.Metadata),
+                    productId = order.ProductId,
                     reference = order.Reference,
                     state = order.State,
                 }, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
 
-        public async Task<Order> Update(Order order)
+        public async Task<Order> Update(Account account, Order order)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {

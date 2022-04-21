@@ -1,4 +1,5 @@
 ﻿using SimpleProject.Application.Interfaces;
+using SimpleProject.Domain.Entities;
 using SimpleProject.Domain.ValueObjects;
 using SimpleProject.Shared.Misc;
 using System.Text.Json;
@@ -16,11 +17,11 @@ namespace SimpleProject.Infrastructure.Gateways
             _dynamicRouteRepository = dynamicRouteRepository ?? throw new ArgumentNullException(nameof(dynamicRouteRepository));
         }
 
-        public async Task<DynamicRouteResponse> Execute(string reference, DynamicRouteRequest dynamicRouteRequest)
+        public async Task<DynamicRouteResponse> Execute(Account account, string reference, DynamicRouteRequest dynamicRouteRequest)
         {
             try
             {
-                await _dynamicRouteRepository.Insert(reference, dynamicRouteRequest);
+                await _dynamicRouteRepository.Insert(account, reference, dynamicRouteRequest);
 
                 using (var httpClient = new HttpClient())
                 {
@@ -36,7 +37,7 @@ namespace SimpleProject.Infrastructure.Gateways
                         Success = httpResponseMessage.IsSuccessStatusCode,
                     };
 
-                    await _dynamicRouteRepository.Insert(reference, dynamicRouteResponse);
+                    await _dynamicRouteRepository.Insert(account, reference, dynamicRouteResponse);
 
                     return dynamicRouteResponse;
                 }

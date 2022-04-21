@@ -31,7 +31,7 @@ namespace SimpleProject.Infrastructure.Services
 
             try
             {
-                transaction = await _transactionRepository.Authorize(transaction);
+                transaction = await _transactionRepository.Authorize(account, transaction);
             }catch (InsufficientBalanceException insufficientBalanceException)
             {
                 transaction.State = TransactionState.Pending;
@@ -74,7 +74,7 @@ namespace SimpleProject.Infrastructure.Services
                 return;
             }
 
-            transaction = await _transactionRepository.Update(transaction);
+            transaction = await _transactionRepository.Update(account, transaction);
 
             if (!transaction.IsCancelled())
             {
@@ -104,7 +104,7 @@ namespace SimpleProject.Infrastructure.Services
 
             transaction.State = TransactionState.Pending;
 
-            transaction = await _transactionRepository.Insert(transaction);
+            transaction = await _transactionRepository.Insert(account, transaction);
 
             if (!transaction.IsPending())
             {
@@ -132,7 +132,7 @@ namespace SimpleProject.Infrastructure.Services
                 return;
             }
 
-            transaction = await _transactionRepository.Update(transaction);
+            transaction = await _transactionRepository.Update(account, transaction);
 
             if (!transaction.IsSettled())
             {
@@ -160,7 +160,7 @@ namespace SimpleProject.Infrastructure.Services
                 return;
             }
 
-            transaction = await _transactionRepository.Void(transaction);
+            transaction = await _transactionRepository.Void(account, transaction);
 
             if (!transaction.IsVoided())
             {

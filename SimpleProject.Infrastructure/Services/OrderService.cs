@@ -33,7 +33,7 @@ namespace SimpleProject.Infrastructure.Services
                 return;
             }
 
-            order = await _orderRepository.Update(order);
+            order = await _orderRepository.Update(account, order);
 
             if (!order.IsCancelled())
             {
@@ -61,7 +61,7 @@ namespace SimpleProject.Infrastructure.Services
                 return;
             }
 
-            order = await _orderRepository.Update(order);
+            order = await _orderRepository.Update(account, order);
 
             if (!order.IsCompleted())
             {
@@ -82,7 +82,7 @@ namespace SimpleProject.Infrastructure.Services
 
         public async Task Create(Account account, DynamicRouteRequest dynamicRouteRequest, Order order, Transaction transaction)
         {
-            order = await _orderRepository.Insert(order);
+            order = await _orderRepository.Insert(account, order);
 
             if (!order.IsPending())
             {
@@ -110,7 +110,7 @@ namespace SimpleProject.Infrastructure.Services
                 return;
             }
 
-            order = await _orderRepository.Update(order);
+            order = await _orderRepository.Update(account, order);
 
             if (!order.IsProcessing())
             {
@@ -128,7 +128,7 @@ namespace SimpleProject.Infrastructure.Services
                 Type = OrderEventType.Processing,
             });
 
-            var dynamicRouteResponse = await _dynamicRoutingGatewayResponse.Execute(order.Reference, dynamicRouteRequest);
+            var dynamicRouteResponse = await _dynamicRoutingGatewayResponse.Execute(account, order.Reference, dynamicRouteRequest);
 
             if (!order.Processed())
             {
@@ -137,7 +137,7 @@ namespace SimpleProject.Infrastructure.Services
                 return;
             }
 
-            order = await _orderRepository.Update(order);
+            order = await _orderRepository.Update(account, order);
 
             if (!order.IsProcessed())
             {

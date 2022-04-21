@@ -8,6 +8,10 @@ namespace SimpleProject.Domain.Entities
 
         public DateTimeOffset Created { get; set; }
 
+        public IDictionary<string, string> Metadata { get; set; }
+
+        public string ProductId { get; set; }
+
         public string Reference { get; set; }
 
         public TransactionState State { get; set; }
@@ -22,6 +26,11 @@ namespace SimpleProject.Domain.Entities
             {
                 Amount = amount,
                 Created = DateTimeOffset.UtcNow,
+                Metadata = new Dictionary<string, string>
+                {
+                    { "reference", reference },
+                },
+                ProductId = "6317",
                 Reference = reference,
                 State = TransactionState.Initial,
                 Updated = DateTimeOffset.UtcNow,

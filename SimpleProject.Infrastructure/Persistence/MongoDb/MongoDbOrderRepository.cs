@@ -14,7 +14,7 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
             _mongoCollection = mongoCollection ?? throw new ArgumentNullException(nameof(mongoCollection));
         }
 
-        public async Task<Order?> Find(string reference)
+        public async Task<Order?> Find(Account account, string reference)
         {
             var asyncCursor = await _mongoCollection.FindAsync(x => x.Reference == reference);
 
@@ -28,9 +28,9 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
             return result.ToDomain();
         }
 
-        public async Task<Order> Insert(Order order)
+        public async Task<Order> Insert(Account account, Order order)
         {
-            var orderDataTransferObject = DataTransferObjects.Order.FromDomain(order);
+            var orderDataTransferObject = DataTransferObjects.Order.FromDomain(account, order);
 
             try
             {
@@ -48,9 +48,9 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
             }
         }
 
-        public async Task<Order> Update(Order order)
+        public async Task<Order> Update(Account account, Order order)
         {
-            var orderDataTransferObject = DataTransferObjects.Order.FromDomain(order);
+            var orderDataTransferObject = DataTransferObjects.Order.FromDomain(account, order);
 
             var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == orderDataTransferObject.Reference && x.Version == orderDataTransferObject.Version, Builders<DataTransferObjects.Order>.Update.Set(x => x.Duration, orderDataTransferObject.Duration).Set(x => x.State, orderDataTransferObject.State).Inc(x => x.Version, 1).Set(x => x.Updated, orderDataTransferObject.Updated));
 

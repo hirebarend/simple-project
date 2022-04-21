@@ -14,9 +14,9 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
             _mongoCollection = mongoCollection ?? throw new ArgumentNullException(nameof(mongoCollection));
         }
 
-        public async Task<Transaction> Authorize(Transaction transaction)
+        public async Task<Transaction> Authorize(Account account, Transaction transaction)
         {
-            var transactionDataTransferObject = DataTransferObjects.Transaction.FromDomain(transaction);
+            var transactionDataTransferObject = DataTransferObjects.Transaction.FromDomain(account, transaction);
 
             var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == transactionDataTransferObject.Reference && x.Version == transactionDataTransferObject.Version, Builders<DataTransferObjects.Transaction>.Update.Set(x => x.State, transactionDataTransferObject.State).Inc(x => x.Version, 1).Set(x => x.Updated, transactionDataTransferObject.Updated));
 
@@ -32,9 +32,9 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
             return result.ToDomain();
         }
 
-        public async Task<Transaction> Insert(Transaction transaction)
+        public async Task<Transaction> Insert(Account account, Transaction transaction)
         {
-            var transactionDataTransferObject = DataTransferObjects.Transaction.FromDomain(transaction);
+            var transactionDataTransferObject = DataTransferObjects.Transaction.FromDomain(account, transaction);
 
             try
             {
@@ -52,9 +52,9 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
             }
         }
 
-        public async Task<Transaction> Update(Transaction transaction)
+        public async Task<Transaction> Update(Account account, Transaction transaction)
         {
-            var transactionDataTransferObject = DataTransferObjects.Transaction.FromDomain(transaction);
+            var transactionDataTransferObject = DataTransferObjects.Transaction.FromDomain(account, transaction);
 
             var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == transactionDataTransferObject.Reference && x.Version == transactionDataTransferObject.Version, Builders<DataTransferObjects.Transaction>.Update.Set(x => x.State, transactionDataTransferObject.State).Inc(x => x.Version, 1).Set(x => x.Updated, transactionDataTransferObject.Updated));
 
@@ -70,9 +70,9 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
             return result.ToDomain();
         }
 
-        public async Task<Transaction> Void(Transaction transaction)
+        public async Task<Transaction> Void(Account account, Transaction transaction)
         {
-            var transactionDataTransferObject = DataTransferObjects.Transaction.FromDomain(transaction);
+            var transactionDataTransferObject = DataTransferObjects.Transaction.FromDomain(account, transaction);
 
             var updateResult = await _mongoCollection.UpdateOneAsync(x => x.Reference == transactionDataTransferObject.Reference && x.Version == transactionDataTransferObject.Version, Builders<DataTransferObjects.Transaction>.Update.Set(x => x.State, transactionDataTransferObject.State).Inc(x => x.Version, 1).Set(x => x.Updated, transactionDataTransferObject.Updated));
 

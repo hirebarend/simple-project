@@ -6,6 +6,8 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects
 {
     public class Transaction
     {
+        public string AccountReference { get; set; }
+
         public int Amount { get; set; }
 
         public double Duration { get; set; }
@@ -15,6 +17,10 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects
         [BsonId]
         public ObjectId Id { get; set; }
 
+        public IDictionary<string, string> Metadata { get; set; }
+
+        public string ProductId { get; set; }
+
         public string Reference { get; set; }
 
         public string State { get; set; }
@@ -23,14 +29,17 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects
 
         public short Version { get; set; }
 
-        public static Transaction FromDomain(Domain.Entities.Transaction transaction)
+        public static Transaction FromDomain(Domain.Entities.Account account, Domain.Entities.Transaction transaction)
         {
             return new Transaction
             {
+                AccountReference = account.Reference,
                 Amount = transaction.Amount,
                 Created = transaction.Created.ToString("o"),
                 Duration = transaction.Updated.Subtract(transaction.Created).TotalMilliseconds,
                 Id = ObjectId.GenerateNewId(),
+                Metadata = transaction.Metadata,
+                ProductId = transaction.ProductId,
                 Reference = transaction.Reference,
                 State = transaction.State.ToString(),
                 Version = transaction.Version,
@@ -44,6 +53,8 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects
             {
                 Amount = Amount,
                 Created = DateTimeOffset.Parse(Created),
+                Metadata = Metadata,
+                ProductId = ProductId,
                 Reference = Reference,
                 State = Enum.Parse<TransactionState>(State),
                 Version = Version,

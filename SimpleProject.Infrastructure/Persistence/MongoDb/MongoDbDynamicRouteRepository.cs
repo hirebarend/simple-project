@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using SimpleProject.Application.Interfaces;
+using SimpleProject.Domain.Entities;
 using SimpleProject.Domain.ValueObjects;
 using SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects;
 
@@ -15,7 +16,7 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
             _mongoCollection = mongoCollection ?? throw new ArgumentNullException(nameof(mongoCollection));
         }
 
-        public async Task Insert(string reference, DynamicRouteResponse dynamicRouteResponse)
+        public async Task Insert(Account account, string reference, DynamicRouteResponse dynamicRouteResponse)
         {
             var json = dynamicRouteResponse.Payload == null ? null : System.Text.Json.JsonSerializer.Serialize(dynamicRouteResponse.Payload);
 
@@ -26,7 +27,7 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
             });
         }
 
-        public async Task Insert(string reference, DynamicRouteRequest dynamicRouteRequest)
+        public async Task Insert(Account account, string reference, DynamicRouteRequest dynamicRouteRequest)
         {
             var json = dynamicRouteRequest.Payload == null ? null : System.Text.Json.JsonSerializer.Serialize(dynamicRouteRequest.Payload);
 

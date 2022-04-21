@@ -34,7 +34,7 @@ namespace SimpleProject.FunctionApp
         {
             if (httpRequest.Method.Equals("GET", StringComparison.InvariantCultureIgnoreCase))
             {
-                var order = await _orderRepository.Find(reference);
+                var order = await _orderRepository.Find(null, reference);
 
                 return new OkObjectResult(order);
             }
