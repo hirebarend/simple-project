@@ -4,6 +4,7 @@ using SimpleProject.Application.Interfaces;
 using SimpleProject.Domain.Entities;
 using SimpleProject.Domain.ValueObjects;
 using SimpleProject.Infrastructure.Persistence.MongoDb.DataTransferObjects;
+using System.Text.Json;
 
 namespace SimpleProject.Infrastructure.Persistence.MongoDb
 {
@@ -16,25 +17,33 @@ namespace SimpleProject.Infrastructure.Persistence.MongoDb
             _mongoCollection = mongoCollection ?? throw new ArgumentNullException(nameof(mongoCollection));
         }
 
-        public async Task Insert(Account account, string reference, DynamicRouteResponse dynamicRouteResponse)
+        public async Task Insert(Account account, string reference, DynamicRouteRequest dynamicRouteRequest, DynamicRouteResponse dynamicRouteResponse)
         {
-            var json = dynamicRouteResponse.Payload == null ? null : System.Text.Json.JsonSerializer.Serialize(dynamicRouteResponse.Payload);
+            var json = dynamicRouteResponse.Payload == null ? null : JsonSerializer.Serialize(dynamicRouteResponse.Payload);
 
             await _mongoCollection.InsertOneAsync(new DynamicRoute
             {
+                Method = dynamicRouteRequest.Method,
                 Payload = string.IsNullOrWhiteSpace(json) ? null : BsonDocument.Parse(json),
                 Reference = reference,
+                Success = dynamicRouteResponse.Success,
+                Type = "DynamicRouteResponse",
+                Url = dynamicRouteRequest.Url,
             });
         }
 
         public async Task Insert(Account account, string reference, DynamicRouteRequest dynamicRouteRequest)
         {
-            var json = dynamicRouteRequest.Payload == null ? null : System.Text.Json.JsonSerializer.Serialize(dynamicRouteRequest.Payload);
+            var json = dynamicRouteRequest.Payload == null ? null : JsonSerializer.Serialize(dynamicRouteRequest.Payload);
 
             await _mongoCollection.InsertOneAsync(new DynamicRoute
             {
+                Method = dynamicRouteRequest.Method,
                 Payload = string.IsNullOrWhiteSpace(json) ? null : BsonDocument.Parse(json),
                 Reference = reference,
+                Success = true,
+                Type = "DynamicRouteRequest",
+                Url = dynamicRouteRequest.Url,
             });
         }
     }

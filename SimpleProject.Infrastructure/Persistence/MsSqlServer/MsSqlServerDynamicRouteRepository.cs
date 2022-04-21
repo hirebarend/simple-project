@@ -3,6 +3,7 @@ using SimpleProject.Application.Interfaces;
 using SimpleProject.Domain.Entities;
 using SimpleProject.Domain.ValueObjects;
 using System.Data.SqlClient;
+using System.Text.Json;
 
 namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
 {
@@ -15,15 +16,18 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
-        public async Task Insert(Account account, string reference, DynamicRouteResponse dynamicRouteResponse)
+        public async Task Insert(Account account, string reference, DynamicRouteRequest dynamicRouteRequest, DynamicRouteResponse dynamicRouteResponse)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 await sqlConnection.QueryFirstAsync<Order>("[dbo].[InsertDynamicRoute]", new
                 {
-                    data = System.Text.Json.JsonSerializer.Serialize(dynamicRouteResponse.Payload),
+                    method = dynamicRouteRequest.Method,
+                    payload = JsonSerializer.Serialize(dynamicRouteResponse.Payload),
                     reference = reference,
-                    message = "DynamicRouteResponse",
+                    success = dynamicRouteResponse.Success,
+                    type = "DynamicRouteResponse",
+                    url = dynamicRouteRequest.Url,
                 }, commandType: System.Data.CommandType.StoredProcedure);
             }
         }
@@ -34,9 +38,12 @@ namespace SimpleProject.Infrastructure.Persistence.MsSqlServer
             {
                 await sqlConnection.QueryFirstAsync<Order>("[dbo].[InsertDynamicRoute]", new
                 {
-                    data = System.Text.Json.JsonSerializer.Serialize(dynamicRouteRequest.Payload),
+                    method = dynamicRouteRequest.Method,
+                    payload = JsonSerializer.Serialize(dynamicRouteRequest.Payload),
                     reference = reference,
-                    message = "DynamicRouteRequest",
+                    success = true,
+                    type = "DynamicRouteRequest",
+                    url = dynamicRouteRequest.Url,
                 }, commandType: System.Data.CommandType.StoredProcedure);
             }
         }

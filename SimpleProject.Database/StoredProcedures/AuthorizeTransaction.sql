@@ -31,20 +31,6 @@ AS BEGIN
 					RETURN;
 				END;
 
-		DECLARE @balance INT;
-
-		UPDATE [dbo].[Accounts] SET @balance = [Balance] = [Balance] + @amount
-		WHERE [Reference] = '9128-7011-4037-8196';
-
-		IF (@balance IS NULL OR @balance < 0)
-			BEGIN;
-				ROLLBACK TRAN;
-
-				RAISERROR('insufficient_balance', 16, 16);
-
-				RETURN;
-			END;
-
 		SELECT * FROM @transactions;
 	COMMIT TRAN;
 END;

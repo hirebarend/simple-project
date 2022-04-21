@@ -5,7 +5,7 @@ namespace SimpleProject.Application.Interfaces
 {
     public interface IDynamicRouteRepository
     {
-        Task Insert(Account account, string reference, DynamicRouteResponse dynamicRouteResponse);
+        Task Insert(Account account, string reference, DynamicRouteRequest dynamicRouteRequest, DynamicRouteResponse dynamicRouteResponse);
 
         Task Insert(Account account, string reference, DynamicRouteRequest dynamicRouteRequest);
     }

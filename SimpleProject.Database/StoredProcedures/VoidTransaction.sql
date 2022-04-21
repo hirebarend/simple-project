@@ -31,9 +31,6 @@ AS BEGIN
 					RETURN;
 				END;
 
-		UPDATE [dbo].[Accounts] SET [Balance] = [Balance] + (@amount * -1)
-		WHERE [Reference] = '9128-7011-4037-8196';
-
 		SELECT * FROM @transactions;
 	COMMIT TRAN;
 END;

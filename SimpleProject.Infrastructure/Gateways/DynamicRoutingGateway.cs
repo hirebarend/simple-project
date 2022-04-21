@@ -37,18 +37,22 @@ namespace SimpleProject.Infrastructure.Gateways
                         Success = httpResponseMessage.IsSuccessStatusCode,
                     };
 
-                    await _dynamicRouteRepository.Insert(account, reference, dynamicRouteResponse);
+                    await _dynamicRouteRepository.Insert(account, reference, dynamicRouteRequest, dynamicRouteResponse);
 
                     return dynamicRouteResponse;
                 }
             }
             catch
             {
-                return new DynamicRouteResponse
+                var dynamicRouteResponse = new DynamicRouteResponse
                 {
                     Payload = null,
                     Success = false,
                 };
+
+                await _dynamicRouteRepository.Insert(account, reference, dynamicRouteRequest, dynamicRouteResponse);
+
+                return dynamicRouteResponse;
             }
         }
     }
